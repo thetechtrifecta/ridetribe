@@ -3,6 +3,34 @@ import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
+import { Metadata } from 'next'
+import type { Viewport } from 'next'
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
+
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Ride Tribe.',
+    template: `%s - RideTribe`
+  },
+  // keywords: ['',''],
+  creator: 'Ryan Meinzer',
+  // description: '',
+  // openGraph: {
+  //   images: [{
+  //     url: "/share-image.png",
+  //   }],
+  // },
+  icons: {
+    icon: '/favicon.ico',
+    // shortcut: '/favicon-16x16.png',
+    // apple: '/apple-touch-icon.png'
+  }
+}
 
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
