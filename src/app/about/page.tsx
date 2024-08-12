@@ -4,10 +4,10 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import NextLink from 'next/link';
-import ProTip from '@/components/ProTip';
-import Copyright from '@/components/Copyright';
+import { currentUser } from "@clerk/nextjs/server";
 
-export default function About() {
+export default async function About() {
+  const user = await currentUser()
   return (
     <Container maxWidth="lg">
       <Box
@@ -20,15 +20,16 @@ export default function About() {
         }}
       >
         <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-          Material UI - Next.js example in TypeScript
+          RideTribe
+        </Typography>
+        <Typography>
+          Hello {user?.firstName} with primary email {user?.primaryEmailAddress?.emailAddress}
         </Typography>
         <Box sx={{ maxWidth: 'sm' }}>
           <Button variant="contained" component={NextLink} href="/">
             Go to the home page
           </Button>
         </Box>
-        <ProTip />
-        <Copyright />
       </Box>
     </Container>
   );
