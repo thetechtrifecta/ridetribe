@@ -6,8 +6,10 @@ import Link from '@mui/material/Link';
 import NextLink from 'next/link';
 import ProTip from '@/components/ProTip';
 import Copyright from '@/components/Copyright';
+import { auth, currentUser } from "@clerk/nextjs/server";
 
-export default function Home() {
+export default async function Home() {
+  const user = await currentUser()
   return (
     <Container maxWidth="lg">
       <Box
@@ -21,6 +23,9 @@ export default function Home() {
       >
         <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
           RideTribe
+        </Typography>
+        <Typography>
+          Hello {user?.firstName} with primary email {user?.primaryEmailAddress?.emailAddress}
         </Typography>
         {/* <Link href="/about" color="secondary" component={NextLink}>
           Go to the about page
