@@ -12,6 +12,8 @@ import {
   SignedOut,
   UserButton
 } from '@clerk/nextjs'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -53,7 +55,11 @@ export default function RootLayout({
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
               <SignedOut>
-                <SignInButton />
+                <SignInButton>
+                  <Button variant="contained">
+                    Sign In
+                  </Button>
+                </SignInButton>
               </SignedOut>
               <SignedIn>
                 <UserButton />
