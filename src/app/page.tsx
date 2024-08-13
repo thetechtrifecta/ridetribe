@@ -2,18 +2,9 @@ import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { currentUser } from "@clerk/nextjs/server";
+import UserSessionInfo from '@/components/UserSessionInfo';
 
-export default async function Home() {
-  const user = await currentUser()
-  // if (!user) return <Typography>Not signed in</Typography>
-  const content = user ? (
-    <Typography>
-      Hello {user?.firstName} with primary email {user?.primaryEmailAddress?.emailAddress}
-    </Typography>
-  ) : (
-    <Typography>Not signed in</Typography>
-  );
+export default function Home() {
   return (
     <Container maxWidth="lg">
       <Box
@@ -28,10 +19,7 @@ export default async function Home() {
         <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
           RideTribe
         </Typography>
-        {/* <Typography>
-          Hello {user?.firstName} with primary email {user?.primaryEmailAddress?.emailAddress}
-        </Typography> */}
-        {content && content}
+        <UserSessionInfo />
       </Box>
     </Container>
   );
