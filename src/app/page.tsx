@@ -20,7 +20,7 @@ export default async function Home() {
         <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
           RideTribe
         </Typography>
-        {
+        {/* {
           user ? (
             <Typography>
               Hello {user?.firstName} with primary email {user?.primaryEmailAddress?.emailAddress}
@@ -28,7 +28,7 @@ export default async function Home() {
           ) : (
             <Typography>Not signed in</Typography>
           )
-        }
+        } */}
       </Box>
     </Container>
   );
