@@ -31,7 +31,7 @@ export default async function Home() {
         {/* <Typography>
           Hello {user?.firstName} with primary email {user?.primaryEmailAddress?.emailAddress}
         </Typography> */}
-        {content}
+        {content && content}
       </Box>
     </Container>
   );
