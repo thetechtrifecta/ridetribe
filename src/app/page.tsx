@@ -6,26 +6,7 @@ import { currentUser } from "@clerk/nextjs/server";
 
 export default async function Home() {
   const user = await currentUser()
-  if (!user) {
-    return (
-      <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-          RideTribe
-        </Typography>
-        <Typography>Not signed in</Typography>
-      </Box>
-    </Container>
-    )
-  }
+  if (!user) return <Typography>Not signed in</Typography>
   return (
     <Container maxWidth="lg">
       <Box
