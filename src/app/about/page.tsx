@@ -5,6 +5,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import NextLink from 'next/link';
 import { currentUser } from "@clerk/nextjs/server";
+import UserSessionInfo from '@/components/UserSessionInfo';
 
 export default async function About() {
   const user = await currentUser()
@@ -22,9 +23,7 @@ export default async function About() {
         <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
           RideTribe
         </Typography>
-        <Typography>
-          Hello {user?.firstName} with primary email {user?.primaryEmailAddress?.emailAddress}
-        </Typography>
+        <UserSessionInfo />
         <Box sx={{ maxWidth: 'sm' }}>
           <Button variant="contained" component={NextLink} href="/">
             Go to the home page
