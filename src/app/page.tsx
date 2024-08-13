@@ -23,7 +23,7 @@ export default async function Home() {
         {
           user ? (
             <Typography>
-              Hello {user.firstName} with primary email {user.primaryEmailAddress?.emailAddress}
+              Hello {user?.firstName} with primary email {user?.primaryEmailAddress?.emailAddress}
             </Typography>
           ) : (
             <Typography>Not signed in</Typography>
