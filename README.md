@@ -52,4 +52,4 @@ psql "postgres://default:************..."
 
 To run script for psql:
 
-```pnpm ts-node --project tsconfig.scripts.json src/scripts/[script file]```
+```ts-node --project tsconfig.scripts.json src/scripts/[script file]```
