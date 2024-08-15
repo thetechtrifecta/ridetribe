@@ -3,6 +3,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import UserSessionInfo from '@/components/UserSessionInfo';
+import CreateRide from '@/components/CreateRide';
 
 export default function Home() {
   return (
@@ -19,6 +20,8 @@ export default function Home() {
         <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
           RideTribe
         </Typography>
+        {/* testing auth for api route */}
+        {/* <CreateRide /> */}
         <UserSessionInfo />
       </Box>
     </Container>
