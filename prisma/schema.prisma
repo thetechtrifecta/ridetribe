@@ -8,8 +8,15 @@ datasource db {
   directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
-model rides {
-  id          Int    @id @default(autoincrement())
-  event_title String
-  event_category String
+model User {
+  id           Int              @id @default(autoincrement())
+  email        String           @unique
+  rides        Ride[] 
+}
+
+model Ride {
+  id           Int               @id @default(autoincrement())
+  title        String
+  creator      User              @relation(fields: [creatorId], references: [id])
+  creatorId    Int
 }
