@@ -19,10 +19,12 @@
     "@mui/material": "latest",
     "@mui/material-nextjs": "latest",
     "@mui/x-date-pickers": "^7.12.0",
+    "@prisma/client": "^5.18.0",
     "@vercel/postgres": "^0.9.0",
     "dayjs": "^1.11.12",
     "dotenv": "^16.4.5",
     "next": "latest",
+    "prisma": "^5.18.0",
     "react": "latest",
     "react-dom": "latest"
   },
