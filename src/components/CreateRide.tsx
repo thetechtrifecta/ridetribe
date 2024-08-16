@@ -9,7 +9,7 @@ const CreateRide = () => {
     event.preventDefault();
     
     try {
-      const response = await fetch('/api/rides/create', {
+      const response = await fetch('/api/ride/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
