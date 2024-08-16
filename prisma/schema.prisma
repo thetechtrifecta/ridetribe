@@ -11,4 +11,5 @@ datasource db {
 model rides {
   id          Int    @id @default(autoincrement())
   event_title String
+  event_category String
 }
