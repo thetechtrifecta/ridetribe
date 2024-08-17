@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
         // Check if the ride exists and fetch its details
         const ride = await prisma.ride.findUnique({
             where: {
-                id: 2
+                id: 3
                 // id: rideId  // Assuming rideId is passed in the request body
             }
         });
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
         // Update the ride with the new title
         const updatedRide = await prisma.ride.update({
             where: {
-                id: 2
+                id: 3
                 // id: rideId
             },
             data: {

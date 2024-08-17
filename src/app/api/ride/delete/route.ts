@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
         // Find the ride with ID 2 to ensure it exists before attempting to delete it
         const ride = await prisma.ride.findUnique({
             where: {
-                id: 2  // Specified ride ID to delete
+                id: 3  // Specified ride ID to delete
             }
         });
 
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
         // Proceed to delete the ride
         const deletedRide = await prisma.ride.delete({
             where: {
-                id: 2
+                id: 3
             }
         });
 
