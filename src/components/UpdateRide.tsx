@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 
-const CreateRide = () => {
+const UpdateRide = () => {
   const [eventTitle, setEventTitle] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
     try {
-      const response = await fetch('/api/ride/create', {
+      const response = await fetch('/api/ride/update', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,7 @@ const CreateRide = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="eventTitle">Ride Title:</label>
+        <label htmlFor="eventTitle">Update Ride Title:</label>
         <input
           type="text"
           id="eventTitle"
@@ -46,4 +46,4 @@ const CreateRide = () => {
   );
 };
 
-export default CreateRide;
+export default UpdateRide;

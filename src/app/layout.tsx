@@ -23,7 +23,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'Ride Tribe.',
+    default: 'Ride Tribe',
     template: `%s - RideTribe`
   },
   // keywords: ['',''],

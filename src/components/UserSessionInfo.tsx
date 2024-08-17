@@ -3,6 +3,8 @@ import Typography from '@mui/material/Typography';
 import { currentUser } from "@clerk/nextjs/server";
 import CreateRide from './CreateRide';
 import { PrismaClient } from '@prisma/client';
+import UpdateRide from './UpdateRide';
+import DeleteRide from './DeleteRide';
 const prisma = new PrismaClient();
 
 export default async function UserSessionInfo() {
@@ -21,6 +23,8 @@ export default async function UserSessionInfo() {
       <Typography>
         {JSON.stringify(ride, null)}
       </Typography>
+      <UpdateRide />
+      <DeleteRide />
     </>
   );
 }
