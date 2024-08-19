@@ -15,13 +15,36 @@ model User {
   firstName     String
   lastName      String
   phone         String
-  rides         Ride[] 
+  rides         Ride[]
+  kids          Kid[]
 }
 
 model Ride {
-  id            Int        @id @default(autoincrement())
-  creator       User       @relation(fields: [creatorId], references: [id])
-  creatorId     Int
-  title         String
-  
+  id              Int        @id @default(autoincrement())
+  creator         User       @relation(fields: [creatorId], references: [id])
+  creatorId       Int
+  title      String?
+  description String?
+  pickupAddress   String
+  pickupTime      DateTime
+  dropoffAddress  String
+  dropoffTime     DateTime
+  wouldDrive      Boolean
+  seatsOffered    Int
+  wantRide        Boolean
+  seatsNeeded     Int
+  kids            Kid[]
 }
+
+model Kid {
+  id              Int        @id @default(autoincrement())
+  creator         User       @relation(fields: [creatorId], references: [id])
+  creatorId       Int
+  ride            Ride       @relation(fields: [rideId], references: [id])
+  rideId          Int
+  firstName       String?
+  lastName        String?
+  age             Int?
+  phone           String
+}
+
