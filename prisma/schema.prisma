@@ -9,14 +9,19 @@ datasource db {
 }
 
 model User {
-  id           Int              @id @default(autoincrement())
-  email        String           @unique
-  rides        Ride[] 
+  id            Int         @id @default(autoincrement())
+  clerkUserId   String      @unique
+  email         String
+  firstName     String
+  lastName      String
+  phone         String
+  rides         Ride[] 
 }
 
 model Ride {
-  id           Int               @id @default(autoincrement())
-  title        String
-  creator      User              @relation(fields: [creatorId], references: [id])
-  creatorId    Int
+  id            Int        @id @default(autoincrement())
+  creator       User       @relation(fields: [creatorId], references: [id])
+  creatorId     Int
+  title         String
+  
 }
