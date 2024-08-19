@@ -5,13 +5,13 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
     try {
-        const { eventTitle } = await req.json();
+        const { clerkUserId, eventTitle } = await req.json();
         // const { rideId, eventTitle } = await req.json();
 
         // Check if the ride exists and fetch its details
-        const ride = await prisma.ride.findUnique({
+        const ride = await prisma.ride.findFirst({
             where: {
-                id: 3
+                creatorId: clerkUserId
                 // id: rideId  // Assuming rideId is passed in the request body
             }
         });
@@ -28,8 +28,8 @@ export async function POST(req: NextRequest) {
         // Update the ride with the new title
         const updatedRide = await prisma.ride.update({
             where: {
-                id: 3
-                // id: rideId
+                // id: 3
+                id: ride.id
             },
             data: {
                 title: eventTitle
