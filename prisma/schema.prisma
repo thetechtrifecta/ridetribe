@@ -40,8 +40,8 @@ model Kid {
   id              Int        @id @default(autoincrement())
   creator         User       @relation(fields: [creatorId], references: [id])
   creatorId       Int
-  ride            Ride       @relation(fields: [rideId], references: [id])
-  rideId          Int
+  ride            Ride?       @relation(fields: [rideId], references: [id])
+  rideId          Int?
   firstName       String
   lastName        String
   age             Int
