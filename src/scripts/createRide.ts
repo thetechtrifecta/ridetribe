@@ -3,9 +3,9 @@ const prisma = new PrismaClient();
 
 async function createUserRide() {
   // First, fetch the user by email to get the ID
-  const user = await prisma.user.get({
+  const user = await prisma.user.findUnique({
     where: {
-      email: 'elsa@prisma.io'
+        clerkUserId: 'user_fakeUser4563IDinClerk'
     }
   });
 
