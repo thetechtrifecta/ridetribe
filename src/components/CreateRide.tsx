@@ -1,12 +1,21 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useUser } from "@clerk/nextjs";
 
 const CreateRide = () => {
+  const { user } = useUser();
   const [eventTitle, setEventTitle] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const clerkUserId = user ? user.id : null;
+
+    if (!clerkUserId) {
+      console.error("No user id available from Clerk.");
+      return;
+    }
     
     try {
       const response = await fetch('/api/ride/create', {
@@ -14,7 +23,7 @@ const CreateRide = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ eventTitle }),
+        body: JSON.stringify({ clerkUserId, eventTitle }),
       });
 
       if (!response.ok) {

@@ -17,7 +17,7 @@ export default async function UserSessionInfo() {
   return (
     <>
       <Typography>
-        Hello {user?.firstName} with primary email {user?.primaryEmailAddress?.emailAddress}
+        Hello {user?.firstName} with clerkUserId {user?.id} and primary email {user?.primaryEmailAddress?.emailAddress}
       </Typography>
       <CreateRide />
       <Typography>

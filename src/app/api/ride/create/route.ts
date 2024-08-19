@@ -5,13 +5,14 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
     try {
-        const { eventTitle } = await req.json();
+        const { clerkUserId, eventTitle } = await req.json();
         // const { email, title } = await req.json();  // Assuming you pass the email and title in the request body
 
         // First, fetch the user by email to get the ID
         const user = await prisma.user.findUnique({
             where: {
-                clerkUserId: 'user_fakeUser4563IDinClerk'
+                // clerkUserId: 'user_fakeUser4563IDinClerk'
+                clerkUserId: clerkUserId
                 // email: email  // Use the email from the request
             }
         });
