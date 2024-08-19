@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 async function createUserRide() {
   // First, fetch the user by email to get the ID
-  const user = await prisma.user.findUnique({
+  const user = await prisma.user.get({
     where: {
       email: 'elsa@prisma.io'
     }
