@@ -30,6 +30,14 @@ export async function POST(req: NextRequest) {
             data: {
                 title: eventTitle,
                 // title: title,  // Use the title from the request
+                pickupAddress: "100 Main St, ZooTown",
+                pickupTime: new Date("2023-10-10T09:00:00Z"),
+                dropoffAddress: "101 Main St, HomeTown",
+                dropoffTime: new Date("2023-10-10T15:00:00Z"),
+                wouldDrive: true,
+                seatsOffered: 3,
+                wantRide: false,
+                seatsNeeded: 0,
                 creatorId: user.id
             }
         });

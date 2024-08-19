@@ -23,8 +23,8 @@ model Ride {
   id              Int        @id @default(autoincrement())
   creator         User       @relation(fields: [creatorId], references: [id])
   creatorId       Int
-  title      String?
-  description String?
+  title           String?
+  description     String?
   pickupAddress   String
   pickupTime      DateTime
   dropoffAddress  String
