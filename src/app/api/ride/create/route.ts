@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
         // First, fetch the user by email to get the ID
         const user = await prisma.user.findUnique({
             where: {
-                email: 'elsa@prisma.io'
+                id: 1
                 // email: email  // Use the email from the request
             }
         });
