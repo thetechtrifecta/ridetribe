@@ -5,6 +5,7 @@ import CreateRide from './CreateRide';
 import { PrismaClient } from '@prisma/client';
 import UpdateRide from './UpdateRide';
 import DeleteRide from './DeleteRide';
+import CreateKid from './CreateKid';
 const prisma = new PrismaClient();
 
 export default async function UserSessionInfo() {
@@ -25,6 +26,7 @@ export default async function UserSessionInfo() {
       </Typography>
       <UpdateRide />
       <DeleteRide />
+      <CreateKid />
     </>
   );
 }
