@@ -7,6 +7,7 @@ import UpdateRide from './UpdateRide';
 import DeleteRide from './DeleteRide';
 import CreateKid from './CreateKid';
 const prisma = new PrismaClient();
+import CreateRideAll from './CreateRideAll';
 
 export default async function UserSessionInfo() {
   const user = await currentUser()
@@ -17,7 +18,7 @@ export default async function UserSessionInfo() {
 
   return (
     <>
-      <Typography>
+      {/* <Typography>
         Hello {user?.firstName} with clerkUserId {user?.id} and primary email {user?.primaryEmailAddress?.emailAddress}
       </Typography>
       <CreateRide />
@@ -26,7 +27,8 @@ export default async function UserSessionInfo() {
       </Typography>
       <UpdateRide />
       <DeleteRide />
-      <CreateKid />
+      <CreateKid /> */}
+      <CreateRideAll />
     </>
   );
 }

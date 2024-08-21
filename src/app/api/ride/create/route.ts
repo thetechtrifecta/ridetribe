@@ -5,15 +5,25 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
     try {
-        const { clerkUserId, eventTitle } = await req.json();
-        // const { email, title } = await req.json();  // Assuming you pass the email and title in the request body
+        const { rideData } = await req.json();
 
-        // First, fetch the user by email to get the ID
+        console.log('Received rideData:', rideData); // Logging the received data
+
+        // Extract the clerkUserId and validate the rest of the ride data
+        const { clerkUserId, eventTitle, description, pickupAddress, pickupTime, dropoffAddress, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded } = rideData;
+        if (!clerkUserId || !eventTitle || !description || !pickupAddress || !pickupTime || !dropoffAddress || !dropoffTime || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined) {
+            return new NextResponse(JSON.stringify({ error: 'Missing required ride data' }), {
+                status: 400,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+        }
+
+        // Fetch the user by clerkUserId to ensure they exist
         const user = await prisma.user.findUnique({
             where: {
-                // clerkUserId: 'user_fakeUser4563IDinClerk'
                 clerkUserId: clerkUserId
-                // email: email  // Use the email from the request
             }
         });
 
@@ -26,20 +36,20 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        // Now create a ride for this user
+        // Create a ride with the provided data, linking it to the verified user
         const ride = await prisma.ride.create({
             data: {
                 title: eventTitle,
-                // title: title,  // Use the title from the request
-                pickupAddress: "100 Main St, ZooTown",
-                pickupTime: new Date("2023-10-10T09:00:00Z"),
-                dropoffAddress: "101 Main St, HomeTown",
-                dropoffTime: new Date("2023-10-10T15:00:00Z"),
-                wouldDrive: true,
-                seatsOffered: 3,
-                wantRide: false,
-                seatsNeeded: 0,
-                creatorId: user.id
+                description: description,
+                pickupAddress: pickupAddress,
+                pickupTime: new Date(pickupTime),
+                dropoffAddress: dropoffAddress,
+                dropoffTime: new Date(dropoffTime),
+                wouldDrive: wouldDrive,
+                seatsOffered: seatsOffered,
+                wantRide: wantRide,
+                seatsNeeded: seatsNeeded,
+                creatorId: user.id // Use verified user's ID
             }
         });
 
@@ -50,23 +60,21 @@ export async function POST(req: NextRequest) {
             }
         });
 
-    } catch (error: unknown) {
-      // Check if error is an instance of Error
-      if (error instanceof Error) {
-          return new NextResponse(JSON.stringify({ error: error.message }), {
-              status: 500,
-              headers: {
-                  'Content-Type': 'application/json',
-              }
-          });
-      } else {
-          // Handle non-Error objects thrown
-          return new NextResponse(JSON.stringify({ error: 'An unknown error occurred' }), {
-              status: 500,
-              headers: {
-                  'Content-Type': 'application/json',
-              }
-          });
-      }
+    } catch (error) {
+        if (error instanceof Error) {
+            return new NextResponse(JSON.stringify({ error: error.message }), {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+        } else {
+            return new NextResponse(JSON.stringify({ error: 'An unknown error occurred' }), {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+        }
     }
 }
