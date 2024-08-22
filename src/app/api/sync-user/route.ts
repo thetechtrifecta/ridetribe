@@ -1,38 +1,41 @@
 import { PrismaClient } from '@prisma/client';
-import { withAuth } from '@clerk/clerk-sdk-node';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
+import { getAuth } from '@clerk/nextjs/server'; 
 
 const prisma = new PrismaClient();
 
-export default withAuth(async function POST(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method !== 'POST') {
-        res.status(405).json({ error: 'Method not allowed' });
-        return;
-    }
+export const POST = async (req: NextRequest) => {
+  const auth = getAuth(req);
+  
+  if (!auth.userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
-    const { clerkUserId, email, firstName, lastName, phone } = req.body;
+  if (req.method !== 'POST') {
+    return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
+  }
 
-    try {
-        const user = await prisma.user.upsert({
-            where: { clerkUserId },
-            update: {}, 
-            create: {
-                clerkUserId,
-                email,
-                firstName,
-                lastName,
-                phone,
-            },
-        });
-        res.status(200).json({ message: 'User synchronized successfully', user });
-    } catch (error) {
-        console.error('Failed to sync user:', error);
-        // Type guard to check if the error is an instance of Error
-        if (error instanceof Error) {
-            res.status(500).json({ error: 'Failed to synchronize user', detail: error.message });
-        } else {
-            // Handle cases where the error is not an Error object
-            res.status(500).json({ error: 'Failed to synchronize user', detail: 'An unknown error occurred' });
-        }
+  const { clerkUserId, email, firstName, lastName, phone } = await req.json();
+
+  try {
+    const user = await prisma.user.upsert({
+      where: { clerkUserId },
+      update: {}, 
+      create: {
+        clerkUserId,
+        email,
+        firstName,
+        lastName,
+        phone,
+      },
+    });
+    return NextResponse.json({ message: 'User synchronized successfully', user }, { status: 200 });
+  } catch (error) {
+    console.error('Failed to sync user:', error);
+    if (error instanceof Error) {
+      return NextResponse.json({ error: 'Failed to synchronize user', detail: error.message }, { status: 500 });
+    } else {
+      return NextResponse.json({ error: 'Failed to synchronize user', detail: 'An unknown error occurred' }, { status: 500 });
     }
-});
+  }
+};
