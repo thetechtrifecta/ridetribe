@@ -11,6 +11,7 @@
     "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
+    "@clerk/clerk-sdk-node": "^5.0.28",
     "@clerk/nextjs": "^5.3.0",
     "@clerk/types": "^4.13.0",
     "@emotion/cache": "latest",
