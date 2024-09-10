@@ -1,14 +1,23 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import React, { useState    } from 'react';
 import { useUser } from "@clerk/nextjs";
+import { TextField, Button, Typography, Checkbox, FormControlLabel, Box, Container } from '@mui/material';
 
 const CreateRide = () => {
   const { user } = useUser();
-  const [eventTitle, setEventTitle] = useState('');
-
+  const [wouldDrive, setWouldDrive] = useState(false);
+  const [wantRide, setWantRide] = useState(false);
+  const [seatsOffered, setSeatsOffered] = useState('');
+  const [seatsNeeded, setSeatsNeeded] = useState('');
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // Ensure at least one option is selected
+    if (!wouldDrive && !wantRide) {
+        alert('Please select at least one option: Would Drive or Want Ride.');
+        return; 
+    }
 
     const clerkUserId = user ? user.id : null;
 
@@ -16,42 +25,97 @@ const CreateRide = () => {
       console.error("No user id available from Clerk.");
       return;
     }
-    
-    try {
-      const response = await fetch('/api/ride/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ clerkUserId, eventTitle }),
-      });
+    const formData = new FormData(event.currentTarget);
 
-      if (!response.ok) {
-        throw new Error(`Failed to create ride: ${response.statusText}`);
-      }
+    const rideData = {
+      eventTitle: formData.get('eventTitle'),
+      description: formData.get('description') as string,
+      pickupAddress: formData.get('pickupAddress'),
+      pickupTime: formData.get('pickupTime'),
+      dropoffAddress: formData.get('dropoffAddress'),
+      dropoffTime: formData.get('dropoffTime'),
+      wouldDrive,
+      seatsOffered: wouldDrive && formData.get('seatsOffered') ? parseInt(formData.get('seatsOffered') as string) : 0,
+      wantRide,
+      seatsNeeded: wantRide && formData.get('seatsNeeded') ? parseInt(formData.get('seatsNeeded') as string) : 0,
+      clerkUserId
+    };
 
-      const result = await response.json();
-      console.log('Ride created successfully:', result);
-    } catch (error) {
-      console.error('Error creating ride:', error);
+    const response = await fetch('/api/ride/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({rideData}),
+    });
+
+    if (response.ok) {
+      alert('ride created')
+    } else {
+      const error = await response.text();
+      console.error('Failed to create ride:', error);
     }
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="eventTitle">Ride Title:</label>
-        <input
-          type="text"
-          id="eventTitle"
-          name="eventTitle"
-          value={eventTitle}
-          onChange={(e) => setEventTitle(e.target.value)}
-          required
-        />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          my: 4,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Typography variant="h6">Create a Ride</Typography>
+        <form onSubmit={handleSubmit} >
+          <TextField label="Ride Title" type="text" name="eventTitle" required fullWidth margin="normal" />
+          <TextField label="Description" type="text" name="description" required fullWidth margin="normal" />
+          <TextField label="Pickup Address" type="text" name="pickupAddress" required fullWidth margin="normal" />
+          <TextField label="Pickup Time" type="datetime-local" name="pickupTime" required fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
+          <TextField label="Dropoff Address" type="text" name="dropoffAddress" required fullWidth margin="normal" />
+          <TextField label="Dropoff Time" type="datetime-local" name="dropoffTime" required fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
+          <Box mt={2}>
+            <FormControlLabel 
+              control={<Checkbox checked={wouldDrive} onChange={(e) => setWouldDrive(e.target.checked)} />}
+              label="Would Drive"
+            />
+            {wouldDrive && (
+              <TextField 
+                label="Seats Offered" 
+                type="number" 
+                name="seatsOffered" 
+                value={seatsOffered}
+                onChange={(e) => setSeatsOffered(e.target.value)}
+                required 
+                fullWidth 
+                margin="normal"
+              />
+            )}
+          </Box>
+          <Box mt={2}>
+            <FormControlLabel 
+              control={<Checkbox checked={wantRide} onChange={(e) => setWantRide(e.target.checked)} />}
+              label="Want Ride"
+            />
+            {wantRide && (
+              <TextField 
+                label="Seats Needed" 
+                type="number" 
+                name="seatsNeeded" 
+                value={seatsNeeded}
+                onChange={(e) => setSeatsNeeded(e.target.value)}
+                required 
+                fullWidth 
+                margin="normal"
+              />
+            )}
+          </Box>
+          <Button type="submit" variant="contained" color="primary">Submit</Button>
+        </form>
+      </Box>
+    </Container>
   );
 };
 

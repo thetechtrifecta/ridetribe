@@ -1,11 +1,9 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
 import { currentUser } from "@clerk/nextjs/server";
-import CreateRide from './CreateRideTitle';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-export default async function UserSessionInfo() {
+export default async function SyncUser() {
   const user = await currentUser()
   if (!user) return
   
@@ -27,19 +25,7 @@ export default async function UserSessionInfo() {
     console.error('Error syncing user:', error);
   }
 
-  const ride = await prisma.ride.findFirst({
-    where: { creatorId: 1 },
-  })
-
   return (
-    <>
-      <Typography>
-        Hello {user?.firstName} with clerkUserId {user?.id} and primary email {user?.primaryEmailAddress?.emailAddress}
-      </Typography>
-      <CreateRide />
-      <Typography>
-        {JSON.stringify(ride, null)}
-      </Typography>
-    </>
+    <div style={{ textAlign: 'center', width: '100%' }}>[User Synced]</div>
   );
 }

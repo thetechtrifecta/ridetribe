@@ -1,29 +1,21 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import UserSessionInfo from '@/components/UserSessionInfo';
+import SyncUser from '@/components/SyncUser';
 import CreateRide from '@/components/CreateRide';
+import { currentUser } from "@clerk/nextjs/server";
+import Title from '@/components/Title';
+// import UserSessionInfo from '@/components/UserSessionInfo';
 
-export default function Home() {
-  return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
-          RideTribe
-        </Typography>
-        {/* testing auth for api route */}
-        {/* <CreateRide /> */}
-        <UserSessionInfo />
-      </Box>
-    </Container>
+export default async function Home() {
+  const user = await currentUser()
+  if (!user) return (
+    <Title />
   );
+  return (
+    <>
+      <Title />
+      <SyncUser />
+      {/* <UserSessionInfo /> */}
+      <CreateRide />
+    </>
+  )
 }
