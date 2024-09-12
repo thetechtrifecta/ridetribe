@@ -3,6 +3,7 @@ import SyncUser from '@/components/SyncUser';
 import CreateRide from '@/components/CreateRide';
 import { currentUser } from "@clerk/nextjs/server";
 import Title from '@/components/Title';
+import Share from '@/components/Share';
 // import UserSessionInfo from '@/components/UserSessionInfo';
 
 export default async function Home() {
@@ -13,6 +14,7 @@ export default async function Home() {
   return (
     <>
       <Title />
+      <Share />
       <SyncUser />
       {/* <UserSessionInfo /> */}
       <CreateRide />
