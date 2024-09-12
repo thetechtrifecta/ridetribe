@@ -26,7 +26,6 @@ model Ride {
   title           String?
   description     String?
   pickupAddress   String
-  pickupTime      DateTime
   dropoffAddress  String
   dropoffTime     DateTime
   wouldDrive      Boolean

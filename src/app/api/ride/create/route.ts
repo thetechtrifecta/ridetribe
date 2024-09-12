@@ -10,8 +10,8 @@ export async function POST(req: NextRequest) {
         console.log('Received rideData:', rideData); // Logging the received data
 
         // Extract the clerkUserId and validate the rest of the ride data
-        const { clerkUserId, eventTitle, description, pickupAddress, pickupTime, dropoffAddress, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded } = rideData;
-        if (!clerkUserId || !eventTitle || !description || !pickupAddress || !pickupTime || !dropoffAddress || !dropoffTime || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined) {
+        const { clerkUserId, eventTitle, description, pickupAddress, dropoffAddress, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded } = rideData;
+        if (!clerkUserId || !eventTitle || !description || !pickupAddress || !dropoffAddress || !dropoffTime || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined) {
             return new NextResponse(JSON.stringify({ error: 'Missing required ride data' }), {
                 status: 400,
                 headers: {
@@ -42,7 +42,6 @@ export async function POST(req: NextRequest) {
                 title: eventTitle,
                 description: description,
                 pickupAddress: pickupAddress,
-                pickupTime: new Date(pickupTime),
                 dropoffAddress: dropoffAddress,
                 dropoffTime: new Date(dropoffTime),
                 wouldDrive: wouldDrive,

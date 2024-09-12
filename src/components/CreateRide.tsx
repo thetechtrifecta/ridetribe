@@ -31,7 +31,6 @@ const CreateRide = () => {
       eventTitle: formData.get('eventTitle'),
       description: formData.get('description') as string,
       pickupAddress: formData.get('pickupAddress'),
-      pickupTime: formData.get('pickupTime'),
       dropoffAddress: formData.get('dropoffAddress'),
       dropoffTime: formData.get('dropoffTime'),
       wouldDrive,
@@ -73,7 +72,6 @@ const CreateRide = () => {
           <TextField label="Ride Title" type="text" name="eventTitle" required fullWidth margin="normal" />
           <TextField label="Description" type="text" name="description" required fullWidth margin="normal" />
           <TextField label="Pickup Address" type="text" name="pickupAddress" required fullWidth margin="normal" />
-          <TextField label="Pickup Time" type="datetime-local" name="pickupTime" required fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
           <TextField label="Dropoff Address" type="text" name="dropoffAddress" required fullWidth margin="normal" />
           <TextField label="Dropoff Time" type="datetime-local" name="dropoffTime" required fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
           <Box mt={2}>
