@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 
 export default async function SyncUser() {
   const user = await currentUser()
-  console.log('currentUser:', user)
   if (!user) return
   
   // Synchronize the user with the database
