@@ -6,27 +6,10 @@ const prisma = new PrismaClient();
 
 export default async function UserSessionInfo() {
   const user = await currentUser()
+  console.log('user:', user)
   if (!user) return
-  
-  // Synchronize the user with the database
-  try {
-    const upsertUser = await prisma.user.upsert({
-      where: { clerkUserId: user.id },
-      update: {}, // No updates if user exists
-      create: {
-        clerkUserId: user.id,
-        email: user.primaryEmailAddress?.emailAddress || '',
-        firstName: user.firstName || 'Unknown',
-        lastName: user.lastName || 'Unknown',
-        phone: user.primaryPhoneNumber?.phoneNumber || 'Not Provided',
-      },
-    });
-    console.log('User synchronized successfully:', upsertUser);
-  } catch (error) {
-    console.error('Error syncing user:', error);
-  }
 
-  const ride = await prisma.ride.findFirst({
+  const rides = await prisma.ride.findMany({
     where: { creatorId: 1 },
   })
 
@@ -36,7 +19,7 @@ export default async function UserSessionInfo() {
         Hello {user?.firstName} with clerkUserId {user?.id} and primary email {user?.primaryEmailAddress?.emailAddress}
       </Typography>
       <Typography>
-        {JSON.stringify(ride, null)}
+        {JSON.stringify(rides, null)}
       </Typography>
     </>
   );
