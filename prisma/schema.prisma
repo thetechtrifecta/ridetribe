@@ -9,14 +9,16 @@ datasource db {
 }
 
 model User {
-  id            Int         @id @default(autoincrement())
-  clerkUserId   String      @unique
-  email         String
+  id            Int          @id @default(autoincrement())
+  clerkUserId   String       @unique
+  email         String  
   firstName     String
   lastName      String
   phone         String
   rides         Ride[]
   kids          Kid[]
+  connections   User[]       @relation("UserConnections")
+  connectedWith User[]       @relation("UserConnections")
 }
 
 model Ride {
@@ -39,7 +41,7 @@ model Kid {
   id              Int        @id @default(autoincrement())
   creator         User       @relation(fields: [creatorId], references: [id])
   creatorId       Int
-  ride            Ride?       @relation(fields: [rideId], references: [id])
+  ride            Ride?      @relation(fields: [rideId], references: [id])
   rideId          Int?
   firstName       String
   lastName        String
