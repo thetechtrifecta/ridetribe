@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { Button, Box } from '@mui/material';
 
 const DeleteRide = () => {
   const handleDelete = async () => {
@@ -27,9 +28,21 @@ const DeleteRide = () => {
   };
 
   return (
-    <div>
-      <button onClick={handleDelete}>Delete Ride</button>
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Button
+        onClick={handleDelete}
+        variant="contained"
+        color="error"
+      >
+        Delete Ride
+      </Button>
+    </Box>
   );
 };
 

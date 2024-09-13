@@ -16,12 +16,12 @@ export default async function Home() {
   return (
     <>
       <Title />
-      <Share />
       <SyncUser />
       <UserSessionInfo />
+      <Share />
       <CreateRide />
-      <CreateKid />
       <DeleteRide />
+      <CreateKid />
     </>
   )
 }

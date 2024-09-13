@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useUser } from "@clerk/nextjs";
+import { TextField, Button, Box } from '@mui/material';
 
 const CreateKid = () => {
   const { user } = useUser();
@@ -38,20 +39,33 @@ const CreateKid = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="kidAge">Kid Age:</label>
-        <input
-          type="number"
-          id="kidAge"
-          name="kidAge"
-          value={kidAge}
-          onChange={(e) => setKidAge(e.target.value)}
-          required
-        />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
+    <Box
+      component="form"
+      sx={{
+        '& > :not(style)': { m: 1 }, // margin for all child elements
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%' // Optional: adjust width as needed
+      }}
+      autoComplete="off"
+      onSubmit={handleSubmit}
+    >
+      <TextField
+        label="Kid Age"
+        type="number"
+        id="kidAge"
+        name="kidAge"
+        value={kidAge}
+        onChange={(e) => setKidAge(e.target.value)}
+        required
+        variant="outlined"
+        margin="normal"
+      />
+      <Button type="submit" variant="contained">
+        Submit
+      </Button>
+    </Box>
   );
 };
 

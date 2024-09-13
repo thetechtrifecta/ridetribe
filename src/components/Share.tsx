@@ -17,7 +17,7 @@ export default function Share() {
         }}
       >
         <Box sx={{ maxWidth: 'sm' }}>
-          <Button variant="contained" component={NextLink} href="sms:?body=Join my RideTribe!" sx={{ margin: .25 }}>
+          <Button color="secondary" variant="contained" component={NextLink} href="sms:?body=Join my RideTribe!" sx={{ margin: .25 }}>
             Share
           </Button>
         </Box>
