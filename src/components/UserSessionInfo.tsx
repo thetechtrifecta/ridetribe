@@ -1,9 +1,7 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
 import { currentUser } from "@clerk/nextjs/server";
 import { PrismaClient } from '@prisma/client';
 import UserDisplay from './UserDisplay';
-import RidesList from './RidesList';
 const prisma = new PrismaClient();
 
 export default async function UserSessionInfo() {
@@ -14,14 +12,9 @@ export default async function UserSessionInfo() {
     where: { clerkUserId: clerkUser.id}
   })
 
-  const rides = await prisma.ride.findMany({
-    where: { creatorId: pgUser?.id },
-  })
-
   return (
     <>
       <UserDisplay pgUser={pgUser} />
-      <RidesList rides={rides} />
     </>
   );
 }

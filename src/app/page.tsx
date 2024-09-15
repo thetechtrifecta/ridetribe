@@ -6,6 +6,7 @@ import Title from '@/components/Title';
 import Share from '@/components/Share';
 import CreateKid from '@/components/CreateKid';
 import UserSessionInfo from '@/components/UserSessionInfo';
+import RidesList from '@/components/RidesList';
 
 export default async function Home() {
   const user = await currentUser()
@@ -17,6 +18,7 @@ export default async function Home() {
       <Title />
       <SyncUser />
       <UserSessionInfo />
+      <RidesList />
       <Share />
       <CreateRide />
       <CreateKid />

@@ -1,27 +1,21 @@
 import React from 'react';
 import { Typography, Paper, Box, Grid } from '@mui/material';
 import DeleteRide from './DeleteRide';
+import { currentUser } from "@clerk/nextjs/server";
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
-// Define the interface for a single ride
-interface Ride {
-  id: number;
-  creatorId: number;
-  title: string | null;
-  description: string | null;
-  pickupAddress: string;
-  dropoffAddress: string;
-  dropoffTime: Date; // Consider if you want to use Date or string for uniformity
-  wouldDrive: boolean;
-  seatsOffered: number;
-  wantRide: boolean;
-  seatsNeeded: number;
-}
+export default async function RidesList() {
+  const clerkUser = await currentUser()
+  if (!clerkUser) return
 
-interface RidesListProps {
-  rides: Ride[];
-}
+  const pgUser = await prisma.user.findUnique({
+    where: { clerkUserId: clerkUser.id}
+  })
 
-const RidesList: React.FC<RidesListProps> = ({ rides }) => {
+  const rides = await prisma.ride.findMany({
+    where: { creatorId: pgUser?.id },
+  })
   return (
     <Box sx={{ margin: 2 }}>
       {rides.map((ride) => (
@@ -63,5 +57,3 @@ const RidesList: React.FC<RidesListProps> = ({ rides }) => {
     </Box>
   );
 };
-
-export default RidesList;
