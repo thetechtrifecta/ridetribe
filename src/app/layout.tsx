@@ -7,19 +7,13 @@ import { Metadata } from 'next'
 import type { Viewport } from 'next'
 import {
   ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton
 } from '@clerk/nextjs'
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+import NavBar from '@/components/NavBar'
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
 }
-
 
 export const metadata: Metadata = {
   title: {
@@ -54,16 +48,7 @@ export default function RootLayout({
             <ThemeProvider theme={theme}>
               {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
               <CssBaseline />
-              <SignedOut>
-                <SignInButton>
-                  <Button variant="contained">
-                    Sign In
-                  </Button>
-                </SignInButton>
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
+              <NavBar />
               {children}
             </ThemeProvider>
           </AppRouterCacheProvider>
