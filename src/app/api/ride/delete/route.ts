@@ -4,11 +4,13 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
+    // Parse the request body to get the rideId
+    const { rideId } = await req.json();
     try {
         // Find the ride with ID 2 to ensure it exists before attempting to delete it
         const ride = await prisma.ride.findUnique({
             where: {
-                id: 8  // Specified ride ID to delete
+                id: rideId // Use dynamic ride ID from the request
             }
         });
 
@@ -24,7 +26,7 @@ export async function POST(req: NextRequest) {
         // Proceed to delete the ride
         const deletedRide = await prisma.ride.delete({
             where: {
-                id: 8
+                id: rideId // Use dynamic ride ID for deletion
             }
         });
 

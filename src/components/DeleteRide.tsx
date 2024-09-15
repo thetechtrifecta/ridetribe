@@ -3,15 +3,19 @@
 import React from 'react';
 import { Button, Box } from '@mui/material';
 
-const DeleteRide = () => {
+interface DeleteRideProps {
+  rideId: number; // Accepting rideId as a prop
+}
+
+const DeleteRide: React.FC<DeleteRideProps> = ({ rideId }) => {
   const handleDelete = async () => {
     try {
       const response = await fetch('/api/ride/delete', {
-        method: 'POST',  
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ rideId: 2 }), // Send the rideId to identify which ride to delete
+        body: JSON.stringify({ rideId }), // Use the passed rideId for deletion
       });
 
       if (!response.ok) {

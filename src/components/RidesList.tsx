@@ -1,5 +1,6 @@
 import React from 'react';
 import { Typography, Paper, Box, Grid } from '@mui/material';
+import DeleteRide from './DeleteRide';
 
 // Define the interface for a single ride
 interface Ride {
@@ -56,6 +57,7 @@ const RidesList: React.FC<RidesListProps> = ({ rides }) => {
               </Grid>
             )}
           </Grid>
+          <DeleteRide rideId={ride.id} />
         </Paper>
       ))}
     </Box>

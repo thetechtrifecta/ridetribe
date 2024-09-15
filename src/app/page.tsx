@@ -6,7 +6,6 @@ import Title from '@/components/Title';
 import Share from '@/components/Share';
 import CreateKid from '@/components/CreateKid';
 import UserSessionInfo from '@/components/UserSessionInfo';
-import DeleteRide from '@/components/DeleteRide';
 
 export default async function Home() {
   const user = await currentUser()
@@ -20,7 +19,6 @@ export default async function Home() {
       <UserSessionInfo />
       <Share />
       <CreateRide />
-      <DeleteRide />
       <CreateKid />
     </>
   )
