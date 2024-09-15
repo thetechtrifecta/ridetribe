@@ -3,6 +3,7 @@
 import React, { useState    } from 'react';
 import { useUser } from "@clerk/nextjs";
 import { TextField, Button, Typography, Checkbox, FormControlLabel, Box, Container } from '@mui/material';
+import Share from '@/components/Share';
 
 const CreateRide = () => {
   const { user } = useUser();
@@ -68,6 +69,7 @@ const CreateRide = () => {
         }}
       >
         <Typography variant="h6">Create a Ride</Typography>
+        <Share />
         <form onSubmit={handleSubmit} >
           <TextField label="Ride Title" type="text" name="eventTitle" required fullWidth margin="normal" />
           <TextField label="Description" type="text" name="description" required fullWidth margin="normal" />
