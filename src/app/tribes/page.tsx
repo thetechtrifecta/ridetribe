@@ -1,7 +1,8 @@
+import Share from '@/components/Share';
 import React from 'react';
 
 const Tribes = () => {
-  return <div>Welcome to the Tribes Page!</div>;
+  return <Share />
 };
 
 export default Tribes;
