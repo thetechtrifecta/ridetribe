@@ -44,7 +44,7 @@ function ResponsiveAppBar() {
             }}
             onClick={() => handleNavigation('/')} // Navigate to home page on click
           >
-            LOGO
+            RIDETRIBE
           </Typography>
 
           {pages.map((page) => (
