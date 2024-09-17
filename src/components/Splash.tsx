@@ -11,7 +11,7 @@ export default function Splash() {
                 Welcome to Ride Tribe!
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                We know that the management of driving or carpooling your kids is a problem. With RideTribe, we fix that by allowing you to create Rides for your kids with Tribes of parents you trust.
+                We know that the management of driving or carpooling your kids is a problem. With RideTribe, we fix that by allowing you to create shared Rides for your kids with Tribes of parents you trust.
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
                     <Image src={logo} alt="Logo" width={200} height={200} />
