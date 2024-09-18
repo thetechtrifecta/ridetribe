@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useState } from 'react';
 import { useUser } from "@clerk/nextjs";
@@ -6,7 +6,10 @@ import { TextField, Button, Box } from '@mui/material';
 
 const CreateKid = () => {
   const { user } = useUser();
-  const [kidAge, setKidAge] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [age, setAge] = useState('');
+  const [phone, setPhone] = useState('');
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -24,7 +27,13 @@ const CreateKid = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ clerkUserId, kidAge }),
+        body: JSON.stringify({
+          clerkUserId,
+          firstName,
+          lastName,
+          age,
+          phone
+        }),
       });
 
       if (!response.ok) {
@@ -52,13 +61,37 @@ const CreateKid = () => {
       onSubmit={handleSubmit}
     >
       <TextField
-        label="Kid Age"
-        type="number"
-        id="kidAge"
-        name="kidAge"
-        value={kidAge}
-        onChange={(e) => setKidAge(e.target.value)}
+        label="First Name"
+        type="text"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
         required
+        variant="outlined"
+        margin="normal"
+      />
+      <TextField
+        label="Last Name"
+        type="text"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+        required
+        variant="outlined"
+        margin="normal"
+      />
+      <TextField
+        label="Age"
+        type="number"
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
+        required
+        variant="outlined"
+        margin="normal"
+      />
+      <TextField
+        label="Phone (optional)"
+        type="text"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
         variant="outlined"
         margin="normal"
       />

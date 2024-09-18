@@ -5,10 +5,10 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
     try {
-        const { clerkUserId, kidAge } = await req.json();
+        const { clerkUserId, firstName, lastName, age, phone } = await req.json();
 
-        const age = parseInt(kidAge, 10);
-        if (isNaN(age)) {
+        const parsedAge = parseInt(age, 10);
+        if (isNaN(parsedAge)) {
             return new NextResponse(JSON.stringify({ error: 'Invalid age provided!' }), {
                 status: 400,
                 headers: {
@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        // First, fetch the user by email to get the ID
         const user = await prisma.user.findUnique({
             where: {
                 clerkUserId: clerkUserId
@@ -33,13 +32,13 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        // Now create a kid for this user
         const kid = await prisma.kid.create({
             data: {
-                firstName: 'Jimmeny',
-                lastName: 'Cricket',
-                age: age,
-                creatorId: user.id
+                creatorId: user.id,
+                firstName,
+                lastName,
+                age: parsedAge,
+                phone
             }
         });
 
@@ -50,8 +49,7 @@ export async function POST(req: NextRequest) {
             }
         });
 
-    } catch (error: unknown) {
-      // Check if error is an instance of Error
+    } catch (error) {
       if (error instanceof Error) {
           return new NextResponse(JSON.stringify({ error: error.message }), {
               status: 500,
@@ -60,7 +58,6 @@ export async function POST(req: NextRequest) {
               }
           });
       } else {
-          // Handle non-Error objects thrown
           return new NextResponse(JSON.stringify({ error: 'An unknown error occurred' }), {
               status: 500,
               headers: {
