@@ -34,14 +34,14 @@ model Ride {
   seatsOffered    Int
   wantRide        Boolean
   seatsNeeded     Int
-  kids            Kid[]      @relation("RidesIn")
+  kids            Kid[]
 }
 
 model Kid {
   id              Int        @id @default(autoincrement())
   creator         User       @relation(fields: [creatorId], references: [id])
   creatorId       Int
-  rides           Ride[]     @relation("RidesIn")
+  rides           Ride[]
   firstName       String
   lastName        String
   age             Int
