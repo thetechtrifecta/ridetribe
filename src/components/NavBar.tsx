@@ -58,12 +58,8 @@ function ResponsiveAppBar() {
                     color: 'white', 
                     display: 'block', 
                     marginLeft: 2,
-                    textDecoration: 'none',  // Removing underline
-                    '&:hover, &:focus': {
-                      textDecoration: 'none',  // Ensures no underline on hover or focus
-                    }
                   }}
-                  onClick={() => handleNavigation(page.path)} // Add onClick event to handle navigation
+                  onClick={() => handleNavigation(page.path)}
                 >
                   {page.name}
                 </Button>
