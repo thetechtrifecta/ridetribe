@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 export async function POST(req: NextRequest) {
     try {
         const { clerkUserId, kidAge } = await req.json();
-        // const { email, title } = await req.json();  // Assuming you pass the email and title in the request body
 
         const age = parseInt(kidAge, 10);
         if (isNaN(age)) {
@@ -21,9 +20,7 @@ export async function POST(req: NextRequest) {
         // First, fetch the user by email to get the ID
         const user = await prisma.user.findUnique({
             where: {
-                // clerkUserId: 'user_fakeUser4563IDinClerk'
                 clerkUserId: clerkUserId
-                // email: email  // Use the email from the request
             }
         });
 
