@@ -51,11 +51,10 @@ const CreateKid = () => {
     <Box
       component="form"
       sx={{
-        '& > :not(style)': { m: 1 }, // margin for all child elements
+        my: 4,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        width: '100%' // Optional: adjust width as needed
       }}
       autoComplete="off"
       onSubmit={handleSubmit}

@@ -58,7 +58,6 @@ const CreateRide = () => {
   };
 
   return (
-    <Container maxWidth="lg">
       <Box
         sx={{
           my: 4,
@@ -112,10 +111,11 @@ const CreateRide = () => {
               />
             )}
           </Box>
-          <Button type="submit" variant="contained" color="primary">Submit</Button>
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Button type="submit" variant="contained" color="primary">Submit</Button>
+          </Box>
         </form>
       </Box>
-    </Container>
   );
 };
 
