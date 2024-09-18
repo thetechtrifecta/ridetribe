@@ -18,11 +18,11 @@ const pages = [
 ];
 
 function ResponsiveAppBar() {
-  const router = useRouter(); // Get the router object
+  const router = useRouter(); 
   const { isSignedIn, user } = useUser();
 
   const handleNavigation = (path: string) => {
-    router.push(path); // Use router.push to navigate
+    router.push(path); 
   };
 
   return (
@@ -42,9 +42,9 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
               display: 'flex',
               alignItems: 'center',
-              cursor: 'pointer', // Make it appear clickable
+              cursor: 'pointer', 
             }}
-            onClick={() => handleNavigation('/')} // Navigate to home page on click
+            onClick={() => handleNavigation('/')} 
           >
             RIDETRIBE
           </Typography>
