@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useUser } from "@clerk/nextjs";
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, Typography } from '@mui/material';
 
 const CreateKid = () => {
   const { user } = useUser();
@@ -60,6 +60,7 @@ const CreateKid = () => {
       autoComplete="off"
       onSubmit={handleSubmit}
     >
+      <Typography variant="h6">Create a Kid</Typography>
       <TextField
         label="First Name"
         type="text"
