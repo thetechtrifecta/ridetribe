@@ -7,7 +7,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import { useRouter } from 'next/navigation'; 
+import { useUser } from '@clerk/clerk-react';
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 const pages = [
@@ -18,6 +19,7 @@ const pages = [
 
 function ResponsiveAppBar() {
   const router = useRouter(); // Get the router object
+  const { isSignedIn, user } = useUser();
 
   const handleNavigation = (path: string) => {
     router.push(path); // Use router.push to navigate
@@ -46,24 +48,27 @@ function ResponsiveAppBar() {
           >
             RIDETRIBE
           </Typography>
-
-          {pages.map((page) => (
-            <Button
-              key={page.name}
-              sx={{
-                color: 'white', 
-                display: 'block', 
-                marginLeft: 2,
-                textDecoration: 'none',  // Removing underline
-                '&:hover, &:focus': {
-                  textDecoration: 'none',  // Ensures no underline on hover or focus
-                }
-              }}
-              onClick={() => handleNavigation(page.path)} // Add onClick event to handle navigation
-            >
-              {page.name}
-            </Button>
-          ))}
+          
+          {
+            isSignedIn &&
+              pages.map((page) => (
+                <Button
+                  key={page.name}
+                  sx={{
+                    color: 'white', 
+                    display: 'block', 
+                    marginLeft: 2,
+                    textDecoration: 'none',  // Removing underline
+                    '&:hover, &:focus': {
+                      textDecoration: 'none',  // Ensures no underline on hover or focus
+                    }
+                  }}
+                  onClick={() => handleNavigation(page.path)} // Add onClick event to handle navigation
+                >
+                  {page.name}
+                </Button>
+              ))
+          }
 
           <Box sx={{ flexGrow: 1 }} />
 
