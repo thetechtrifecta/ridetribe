@@ -17,7 +17,7 @@ export default function Share() {
         }}
       >
         <Box sx={{ maxWidth: 'sm' }}>
-          <Button color="secondary" variant="contained" component={NextLink} href="sms:?body=Join my RideTribe!" sx={{ margin: .25 }}>
+          <Button color="secondary" variant="contained" component={NextLink} href="sms:?body=Join my Tribe for shared Rides with our Kids at RideTribe.co" sx={{ margin: .25 }}>
             Invite my Tribe
           </Button>
         </Box>
