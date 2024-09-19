@@ -10,8 +10,10 @@ export async function POST(req: NextRequest) {
         console.log('Received rideData:', rideData); // Logging the received data
 
         // Extract the clerkUserId and validate the rest of the ride data
-        const { clerkUserId, eventTitle, description, pickupAddress, dropoffAddress, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded } = rideData;
-        if (!clerkUserId || !eventTitle || !description || !pickupAddress || !dropoffAddress || !dropoffTime || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined) {
+        const { clerkUserId, eventTitle, description, pickupAddress, dropoffAddress, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = rideData;
+
+        // Validate all necessary fields
+        if (!clerkUserId || !eventTitle || !description || !pickupAddress || !dropoffAddress || !dropoffTime || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined || !Array.isArray(kids)) {
             return new NextResponse(JSON.stringify({ error: 'Missing required ride data' }), {
                 status: 400,
                 headers: {
@@ -36,7 +38,7 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        // Create a ride with the provided data, linking it to the verified user
+        // Create the ride, linking it to the user and associating the kids
         const ride = await prisma.ride.create({
             data: {
                 title: eventTitle,
@@ -48,7 +50,15 @@ export async function POST(req: NextRequest) {
                 seatsOffered: seatsOffered,
                 wantRide: wantRide,
                 seatsNeeded: seatsNeeded,
-                creatorId: user.id // Use verified user's ID
+                creatorId: user.id,  // Use the verified user's ID
+
+                // Associate the kids with the ride using the `connect` field
+                kids: {
+                    connect: kids.map((kidId: number) => ({ id: kidId }))
+                }
+            },
+            include: {
+                kids: true  // Optionally include the kids in the response
             }
         });
 
