@@ -1,8 +1,38 @@
-import Share from '@/components/Share';
+"use client"
+
 import React from 'react';
+import Share from '@/components/Share';
+import UserSearch from '@/components/UserSearch';
+import { TextField, Button, Box, Typography } from '@mui/material';
 
 const Tribes = () => {
-  return <Share />
+  const handleAddConnection = async (userId: number): Promise<void> => {
+    try {
+      const response = await fetch('/api/user/connections/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add connection');
+      }
+
+      alert('Connection added successfully');
+    } catch (error) {
+      console.error('Error adding connection:', error);
+      alert('Failed to add connection');
+    }
+  };
+
+  return (
+    <>
+      <Share />
+      <UserSearch onAddConnection={handleAddConnection} />
+    </>
+  );
 };
 
 export default Tribes;
