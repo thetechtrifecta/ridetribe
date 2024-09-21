@@ -44,9 +44,24 @@ export async function POST(req: NextRequest) {
         });
 
     } catch (error) {
-        return new NextResponse(JSON.stringify({ error: 'Failed to delete connection', details: error.message }), {
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        // Check if the error is an instance of Error
+        if (error instanceof Error) {
+            return new NextResponse(JSON.stringify({
+                error: 'Failed to delete connection',
+                details: error.message
+            }), {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        } else {
+            // Handle cases where the error might not be an Error object
+            return new NextResponse(JSON.stringify({
+                error: 'Failed to delete connection',
+                details: 'An unexpected error occurred'
+            }), {
+                status: 500,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
     }
 }
