@@ -3,7 +3,7 @@
 import React from 'react';
 import Share from '@/components/Share';
 import UserSearch from '@/components/UserSearch';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import ConnectionsList from '@/components/ConnectionsList';
 
 const Tribes = () => {
   const handleAddConnection = async (userId: number): Promise<void> => {
@@ -31,6 +31,7 @@ const Tribes = () => {
     <>
       <Share />
       <UserSearch onAddConnection={handleAddConnection} />
+      <ConnectionsList />
     </>
   );
 };
