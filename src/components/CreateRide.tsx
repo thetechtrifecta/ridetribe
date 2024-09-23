@@ -91,8 +91,8 @@ const CreateRide = () => {
       <form onSubmit={handleSubmit}>
         <TextField label="Ride Title" type="text" name="eventTitle" required fullWidth margin="normal" />
         <TextField label="Description" type="text" name="description" required fullWidth margin="normal" />
-        <SelectAddress onSelect={setPickupAddress} />
-        <SelectAddress onSelect={setDropoffAddress} />
+        <SelectAddress label="Pickup Address" onSelect={setPickupAddress} />
+        <SelectAddress label="Dropoff Address" onSelect={setDropoffAddress} />
         <TextField label="Dropoff Time" type="datetime-local" name="dropoffTime" required fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
         <SelectKids onChange={setSelectedKids} />
         <Box mt={2}>

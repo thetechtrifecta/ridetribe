@@ -25,7 +25,7 @@ function loadScript(src: string, position: HTMLElement | null, id: string) {
 
 const autocompleteService = { current: null };
 
-export default function SelectAddress({ onSelect }: SelectAddressProps) {
+export default function SelectAddress({ label, onSelect }: SelectAddressProps) {
   const [value, setValue] = React.useState<PlaceType | null>(null);
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState<readonly PlaceType[]>([]);
@@ -120,7 +120,7 @@ export default function SelectAddress({ onSelect }: SelectAddressProps) {
         setInputValue(newInputValue);
       }}
       renderInput={(params) => (
-        <TextField {...params} label="Location" required fullWidth margin="normal" />
+        <TextField {...params} label={label} required fullWidth margin="normal" />
       )}
       renderOption={(props, option) => {
         const { key, ...optionProps } = props;

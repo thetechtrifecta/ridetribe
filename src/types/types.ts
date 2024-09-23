@@ -29,5 +29,6 @@ export interface PlaceType {
 }
 
 export interface SelectAddressProps {
+  label: string;
   onSelect: React.Dispatch<React.SetStateAction<PlaceType | null>>;
 }
