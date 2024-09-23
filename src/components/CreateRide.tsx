@@ -5,7 +5,8 @@ import { useUser } from "@clerk/nextjs";
 import { TextField, Button, Typography, Checkbox, FormControlLabel, Box } from '@mui/material';
 import Share from '@/components/Share';
 import SelectKids from '@/components/SelectKids';
-import { Kid } from '@/types/types';
+import { Kid, PlaceType } from '@/types/types';
+import SelectAddress from '@/components/SelectAddress';
 
 const CreateRide = () => {
   const { user } = useUser();
@@ -14,6 +15,8 @@ const CreateRide = () => {
   const [seatsOffered, setSeatsOffered] = useState('');
   const [seatsNeeded, setSeatsNeeded] = useState('');
   const [selectedKids, setSelectedKids] = useState<Kid[]>([]);
+  const [pickupAddress, setPickupAddress] = useState<PlaceType | null>(null);
+  const [dropoffAddress, setDropoffAddress] = useState<PlaceType | null>(null);  
 
   // Automatically update seatsNeeded when wantRide is selected and kids are chosen
   useEffect(() => {
@@ -30,6 +33,12 @@ const CreateRide = () => {
         return; 
     }
 
+      // Validate addresses
+    if (!pickupAddress || !dropoffAddress) {
+      alert('Both pickup and dropoff addresses must be selected.');
+      return;
+    }
+
     const clerkUserId = user ? user.id : null;
     if (!clerkUserId) {
       console.error("No user id available from Clerk.");
@@ -40,8 +49,8 @@ const CreateRide = () => {
     const rideData = {
       eventTitle: formData.get('eventTitle'),
       description: formData.get('description') as string,
-      pickupAddress: formData.get('pickupAddress'),
-      dropoffAddress: formData.get('dropoffAddress'),
+      pickupAddress: pickupAddress.description,
+      dropoffAddress: dropoffAddress.description,
       dropoffTime: formData.get('dropoffTime'),
       wouldDrive,
       seatsOffered: wouldDrive ? parseInt(formData.get('seatsOffered') as string) : 0,
@@ -82,8 +91,8 @@ const CreateRide = () => {
       <form onSubmit={handleSubmit}>
         <TextField label="Ride Title" type="text" name="eventTitle" required fullWidth margin="normal" />
         <TextField label="Description" type="text" name="description" required fullWidth margin="normal" />
-        <TextField label="Pickup Address" type="text" name="pickupAddress" required fullWidth margin="normal" />
-        <TextField label="Dropoff Address" type="text" name="dropoffAddress" required fullWidth margin="normal" />
+        <SelectAddress onSelect={setPickupAddress} />
+        <SelectAddress onSelect={setDropoffAddress} />
         <TextField label="Dropoff Time" type="datetime-local" name="dropoffTime" required fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
         <SelectKids onChange={setSelectedKids} />
         <Box mt={2}>
