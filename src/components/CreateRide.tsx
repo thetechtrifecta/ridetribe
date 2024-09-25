@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useUser } from "@clerk/nextjs";
-import { TextField, Button, Typography, Checkbox, FormControlLabel, Box } from '@mui/material';
+import { TextField, Button, Typography, Checkbox, FormControlLabel, Box, RadioGroup, Radio } from '@mui/material';
 import Share from '@/components/Share';
 import SelectKids from '@/components/SelectKids';
 import { Kid, PlaceType } from '@/types/types';
@@ -12,6 +12,7 @@ const CreateRide = () => {
   const { user } = useUser();
   const [wouldDrive, setWouldDrive] = useState(false);
   const [wantRide, setWantRide] = useState(false);
+  const [rideType, setRideType] = useState('');
   const [seatsOffered, setSeatsOffered] = useState('');
   const [seatsNeeded, setSeatsNeeded] = useState('');
   const [selectedKids, setSelectedKids] = useState<Kid[]>([]);
@@ -51,13 +52,15 @@ const CreateRide = () => {
       description: formData.get('description') as string,
       pickupAddress: pickupAddress.description,
       dropoffAddress: dropoffAddress.description,
+      pickupTime: formData.get('pickupTime'),
       dropoffTime: formData.get('dropoffTime'),
       wouldDrive,
       seatsOffered: wouldDrive ? parseInt(formData.get('seatsOffered') as string) : 0,
       wantRide,
       seatsNeeded: wantRide ? parseInt(seatsNeeded) : 0,  // Automatically set seatsNeeded to selectedKids.length
       kids: selectedKids.map(kid => kid.id),  // Assuming kid objects have an 'id' property
-      clerkUserId
+      clerkUserId,
+      rideType
     };
 
     const response = await fetch('/api/ride/create', {
@@ -93,7 +96,16 @@ const CreateRide = () => {
         <TextField label="Description" type="text" name="description" required fullWidth margin="normal" />
         <SelectAddress label="Pickup Address" onSelect={setPickupAddress} />
         <SelectAddress label="Dropoff Address" onSelect={setDropoffAddress} />
-        <TextField label="Dropoff Time" type="datetime-local" name="dropoffTime" required fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
+        <RadioGroup row value={rideType} onChange={(e) => setRideType(e.target.value)}>
+          <FormControlLabel value="to" control={<Radio />} label="To Event" />
+          <FormControlLabel value="from" control={<Radio />} label="From Event" />
+        </RadioGroup>
+        {rideType === 'to' && (
+          <TextField label="Dropoff Time" type="datetime-local" name="dropoffTime" required fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
+        )}
+        {rideType === 'from' && (
+          <TextField label="Pickup Time" type="datetime-local" name="pickupTime" required fullWidth margin="normal" InputLabelProps={{ shrink: true }} />
+        )}
         <SelectKids onChange={setSelectedKids} />
         <Box mt={2}>
           <FormControlLabel 
