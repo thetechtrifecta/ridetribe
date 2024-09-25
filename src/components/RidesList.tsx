@@ -34,7 +34,9 @@ export default async function RidesList() {
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
               <Typography variant="subtitle1">Dropoff Time:</Typography>
-              <Typography variant="body1">{new Date(ride.dropoffTime).toLocaleString()}</Typography>
+              <Typography variant="body1">
+                {ride.dropoffTime ? new Date(ride.dropoffTime).toLocaleString() : ''}
+              </Typography>
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
               <Typography variant="subtitle1">Seats Offered:</Typography>
