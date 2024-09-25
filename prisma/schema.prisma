@@ -27,9 +27,11 @@ model Ride {
   creatorId       Int
   title           String?
   description     String?
+  rideType        String     @default("to")
+  pickupTime      DateTime?
   pickupAddress   String
   dropoffAddress  String
-  dropoffTime     DateTime
+  dropoffTime     DateTime?
   wouldDrive      Boolean
   seatsOffered    Int
   wantRide        Boolean
