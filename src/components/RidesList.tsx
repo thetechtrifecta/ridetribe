@@ -28,6 +28,12 @@ export default async function RidesList() {
               <Typography variant="subtitle1">Pickup:</Typography>
               <Typography variant="body1">{ride.pickupAddress}</Typography>
             </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <Typography variant="subtitle1">Pickup Time:</Typography>
+              <Typography variant="body1">
+                {ride.pickupTime ? new Date(ride.pickupTime).toLocaleString() : ''}
+              </Typography>
+            </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Typography variant="subtitle1">Dropoff:</Typography>
               <Typography variant="body1">{ride.dropoffAddress}</Typography>
