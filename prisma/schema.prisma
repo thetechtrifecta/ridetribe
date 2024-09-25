@@ -27,7 +27,7 @@ model Ride {
   creatorId       Int
   title           String?
   description     String?
-  rideType        String     @default("to")
+  rideType        String
   pickupTime      DateTime?
   pickupAddress   String
   dropoffAddress  String

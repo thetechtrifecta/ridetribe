@@ -10,10 +10,11 @@ export async function POST(req: NextRequest) {
         console.log('Received rideData:', rideData); // Logging the received data
 
         // Extract the clerkUserId and validate the rest of the ride data
-        const { clerkUserId, eventTitle, description, pickupAddress, dropoffAddress, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = rideData;
+        const { clerkUserId, eventTitle, description, pickupAddress, dropoffAddress, rideType, pickupTime, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = rideData;
 
-        // Validate all necessary fields
-        if (!clerkUserId || !eventTitle || !description || !pickupAddress || !dropoffAddress || !dropoffTime || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined || !Array.isArray(kids)) {
+        // Validate all necessary fields based on rideType
+        if (!clerkUserId || !eventTitle || !description || !pickupAddress || !dropoffAddress || !rideType || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined || !Array.isArray(kids) ||
+            (rideType === 'to' && !dropoffTime) || (rideType === 'from' && !pickupTime)) {
             return new NextResponse(JSON.stringify({ error: 'Missing required ride data' }), {
                 status: 400,
                 headers: {
@@ -45,7 +46,9 @@ export async function POST(req: NextRequest) {
                 description: description,
                 pickupAddress: pickupAddress,
                 dropoffAddress: dropoffAddress,
-                dropoffTime: new Date(dropoffTime),
+                pickupTime: rideType === 'from' ? new Date(pickupTime) : null,
+                dropoffTime: rideType === 'to' ? new Date(dropoffTime) : null,
+                rideType,
                 wouldDrive: wouldDrive,
                 seatsOffered: seatsOffered,
                 wantRide: wantRide,
