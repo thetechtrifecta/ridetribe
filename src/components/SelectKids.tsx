@@ -49,7 +49,7 @@ const SelectKids: React.FC<SelectKidsProps> = ({ onChange }) => {
       )}
       style={{ width: '100%' }}
       renderInput={(params) => (
-        <TextField {...params} label="Kids" variant="outlined" fullWidth margin="normal"/>
+        <TextField {...params} label="Kids (optional)" variant="outlined" fullWidth margin="normal"/>
       )}
     />
   );
