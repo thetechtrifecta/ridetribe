@@ -138,7 +138,7 @@ const CreateRide = () => {
         <SelectKids onChange={setSelectedKids} />
         <Box mt={2}>
           <FormControl component="fieldset" sx={{ mt: 2, mb: 2 }} fullWidth margin="normal">
-            <FormLabel component="legend">Preferences *</FormLabel>
+            <FormLabel component="legend">Ride Preferences *</FormLabel>
             <FormControlLabel control={<Checkbox checked={wouldDrive} onChange={(e) => setWouldDrive(e.target.checked)} />} label="Would Drive" />
             {wouldDrive && (
               <TextField label="Seats Offered" type="number" name="seatsOffered" value={seatsOffered} onChange={(e) => handleSeatsChange(e, setSeatsOffered, (valid) => {})} required
