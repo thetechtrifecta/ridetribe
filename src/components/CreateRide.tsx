@@ -116,29 +116,31 @@ const CreateRide = () => {
       <Typography variant="h6">Create a Ride</Typography>
       <Share />
       <form onSubmit={handleSubmit}>
-        <TextField label="Ride Title" type="text" name="eventTitle" value={eventTitle} onChange={handleEventTitleChange} required fullWidth margin="normal"
+        <TextField label="Ride Title" type="text" name="eventTitle" value={eventTitle} onChange={handleEventTitleChange} required fullWidth sx={{ mt: .25, mb: .25 }}
           error={!isEventTitleValid} helperText={!isEventTitleValid ? "Title must be under 20 characters" : " "} />
-        <TextField label="Description" type="text" name="description" value={description} onChange={handleDescriptionChange} required fullWidth margin="normal"
+        <TextField label="Description" type="text" name="description" value={description} onChange={handleDescriptionChange} required fullWidth sx={{ mt: .25, mb: -1.5 }}
           error={!isDescriptionValid} helperText={!isDescriptionValid ? "Description must be under 100 characters" : " "} />
         <SelectAddress label="Pickup Address" onSelect={setPickupAddress} />
         <SelectAddress label="Dropoff Address" onSelect={setDropoffAddress} />
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Ride Direction *</FormLabel>
+        <FormControl component="fieldset" required fullWidth margin="normal">
+          <FormLabel component="legend">Ride Direction</FormLabel>
           <RadioGroup row name="rideType" value={rideType} onChange={(e) => setRideType(e.target.value)}>
             <FormControlLabel value="to" control={<Radio />} label="To Event" />
             <FormControlLabel value="from" control={<Radio />} label="From Event" />
           </RadioGroup>
         </FormControl>
-        {rideType === 'to' && (
-          <TextField label="Dropoff Time" type="datetime-local" name="dropoffTime" value={dropoffTime} onChange={(e) => setDropoffTime(e.target.value)} required fullWidth margin="normal" InputLabelProps={{ shrink: true }} sx={{ mt: 2, mb: 2 }} />
-        )}
-        {rideType === 'from' && (
-          <TextField label="Pickup Time" type="datetime-local" name="pickupTime" value={pickupTime} onChange={(e) => setPickupTime(e.target.value)} required fullWidth margin="normal" InputLabelProps={{ shrink: true }} sx={{ mt: 2, mb: 2 }} />
-        )}
+        <Box>
+          {rideType === 'to' && (
+            <TextField label="Dropoff Time" type="datetime-local" name="dropoffTime" value={dropoffTime} onChange={(e) => setDropoffTime(e.target.value)} required fullWidth margin="normal" InputLabelProps={{ shrink: true }} sx={{ mt: 2, mb: 2 }} />
+          )}
+          {rideType === 'from' && (
+            <TextField label="Pickup Time" type="datetime-local" name="pickupTime" value={pickupTime} onChange={(e) => setPickupTime(e.target.value)} required fullWidth margin="normal" InputLabelProps={{ shrink: true }} sx={{ mt: 2, mb: 2 }} />
+          )}
+        </Box>
         <SelectKids onChange={setSelectedKids} />
-        <Box mt={2}>
-          <FormControl component="fieldset" sx={{ mt: 2, mb: 2 }} fullWidth margin="normal">
-            <FormLabel component="legend">Ride Preferences *</FormLabel>
+        <Box>
+          <FormControl component="fieldset" sx={{ mt: 2, mb: 2 }} required fullWidth margin="normal">
+            <FormLabel component="legend">Ride Preferences</FormLabel>
             <FormControlLabel control={<Checkbox checked={wouldDrive} onChange={(e) => setWouldDrive(e.target.checked)} />} label="Would Drive" />
             {wouldDrive && (
               <TextField label="Seats Offered" type="number" name="seatsOffered" value={seatsOffered} onChange={(e) => handleSeatsChange(e, setSeatsOffered, (valid) => {})} required
@@ -151,20 +153,6 @@ const CreateRide = () => {
             )}
           </FormControl>
         </Box>
-        {/* <Box mt={2}>
-          <FormControlLabel control={<Checkbox checked={wouldDrive} onChange={(e) => setWouldDrive(e.target.checked)} />} label="Would Drive" />
-          {wouldDrive && (
-            <TextField label="Seats Offered" type="number" name="seatsOffered" value={seatsOffered} onChange={(e) => handleSeatsChange(e, setSeatsOffered, (valid) => {})} required fullWidth margin="normal"
-              error={seatsOffered !== '' && parseInt(seatsOffered, 10) >= 10} helperText={seatsOffered !== '' && parseInt(seatsOffered, 10) >= 10 ? "Seats offered must be less than 10" : " "} />
-          )}
-        </Box>
-        <Box mt={2}>
-          <FormControlLabel control={<Checkbox checked={wantRide} onChange={(e) => setWantRide(e.target.checked)} />} label="Want Ride" />
-          {wantRide && (
-            <TextField label="Seats Needed" type="number" name="seatsNeeded" value={seatsNeeded} onChange={(e) => handleSeatsChange(e, setSeatsNeeded, (valid) => {})} required fullWidth margin="normal"
-              error={seatsNeeded !== '' && parseInt(seatsNeeded, 10) >= 10} helperText={seatsNeeded !== '' && parseInt(seatsNeeded, 10) >= 10 ? "Seats needed must be less than 10" : " "} />
-          )}
-        </Box> */}
         <Button type="submit" variant="contained" color="primary" disabled={!isFormValid}>
           Submit
         </Button>
