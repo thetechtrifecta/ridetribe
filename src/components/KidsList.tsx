@@ -1,22 +1,44 @@
-import React from 'react';
-import { Typography, Paper, Box, Grid } from '@mui/material';
-import DeleteKid from './DeleteKid'
-import { currentUser } from "@clerk/nextjs/server";
-import { PrismaClient } from '@prisma/client';
+"use client"
 
-const prisma = new PrismaClient();
+import React, { useState, useEffect } from 'react';
+import { Typography, Paper, Box, Grid, Button } from '@mui/material';
+import { useUser } from "@clerk/nextjs";
+import UpdateKid from './UpdateKid';
+import DeleteKid from './DeleteKid'; 
+import { Kid } from '@/types/types'; 
 
-export default async function KidsList() {
-  const clerkUser = await currentUser();
-  if (!clerkUser) return;
+const KidsList = () => {
+  const { user } = useUser();
+  const [kids, setKids] = useState<Kid[]>([]);
+  const [selectedKid, setSelectedKid] = useState<Kid | null>(null);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
-  const pgUser = await prisma.user.findUnique({
-    where: { clerkUserId: clerkUser.id }
-  });
+  const fetchKids = async () => {
+    if (user) {
+      const res = await fetch(`/api/kids`);
+      const data = await res.json();
+      setKids(data);
+    }
+  };
 
-  const kids = await prisma.kid.findMany({
-    where: { creatorId: pgUser?.id },
-  });
+  useEffect(() => {
+    fetchKids();
+  }, [user]);
+
+  const handleOpenUpdateDialog = (kid: Kid) => {
+    setSelectedKid(kid);
+    setOpenUpdateDialog(true);
+  };
+
+  const handleCloseUpdateDialog = () => {
+    setOpenUpdateDialog(false);
+    setSelectedKid(null);
+  };
+
+  const handleSaveUpdate = () => {
+    handleCloseUpdateDialog();
+    fetchKids();
+  };
 
   return (
     <Box sx={{ margin: 2 }}>
@@ -36,10 +58,25 @@ export default async function KidsList() {
                 <Typography variant="body1">{kid.phone}</Typography>
               </Grid>
             )}
+            <Grid item xs={12}>
+              <Button onClick={() => handleOpenUpdateDialog(kid)} variant="contained" color="primary">
+                Update
+              </Button>
+              <DeleteKid kidId={kid.id} /> 
+            </Grid>
           </Grid>
-          <DeleteKid kidId={kid.id} />
         </Paper>
       ))}
+      {selectedKid && (
+        <UpdateKid
+          kid={selectedKid}
+          open={openUpdateDialog}
+          onClose={handleCloseUpdateDialog}
+          onSave={handleSaveUpdate}
+        />
+      )}
     </Box>
   );
 };
+
+export default KidsList;
