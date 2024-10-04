@@ -35,12 +35,23 @@ export async function PUT(req: NextRequest) {
             }
         });
 
-    } catch (error) {
-        return new NextResponse(JSON.stringify({ error: error.message }), {
-            status: 500,
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        });
+    } catch (error: unknown) {
+        // Check if error is an instance of Error
+        if (error instanceof Error) {
+            return new NextResponse(JSON.stringify({ error: error.message }), {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+        } else {
+            // Handle non-Error objects thrown
+            return new NextResponse(JSON.stringify({ error: 'An unknown error occurred' }), {
+                status: 500,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+        }
     }
 }
