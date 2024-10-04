@@ -3,12 +3,13 @@ import { Autocomplete, Checkbox, TextField } from '@mui/material';
 import { Kid } from '@/types/types'; 
 
 interface SelectKidsProps {
+  selected: Kid[]; // Array of selected Kid objects
   onChange: (selectedKids: Kid[]) => void;
 }
 
-const SelectKids: React.FC<SelectKidsProps> = ({ onChange }) => {
+const SelectKids: React.FC<SelectKidsProps> = ({ selected, onChange }) => {
   const [kids, setKids] = useState<Kid[]>([]);
-  const [selectedKids, setSelectedKids] = useState<Kid[]>([]);
+  const [selectedKids, setSelectedKids] = useState<Kid[]>(selected); // Initialize state with selected prop
 
   useEffect(() => {
     async function fetchKids() {

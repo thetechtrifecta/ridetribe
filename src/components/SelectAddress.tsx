@@ -15,7 +15,6 @@ function loadScript(src: string, position: HTMLElement | null, id: string) {
   if (!position) {
     return;
   }
-
   const script = document.createElement('script');
   script.setAttribute('async', '');
   script.setAttribute('id', id);
@@ -25,10 +24,10 @@ function loadScript(src: string, position: HTMLElement | null, id: string) {
 
 const autocompleteService = { current: null };
 
-export default function SelectAddress({ label, onSelect }: SelectAddressProps) {
-  const [value, setValue] = React.useState<PlaceType | null>(null);
-  const [inputValue, setInputValue] = React.useState('');
-  const [options, setOptions] = React.useState<readonly PlaceType[]>([]);
+export default function SelectAddress({ label, onSelect, selectedAddress = null }: SelectAddressProps) {
+  const [value, setValue] = React.useState<PlaceType | null>(selectedAddress);
+  const [inputValue, setInputValue] = React.useState(selectedAddress?.description || '');
+  const [options, setOptions] = React.useState<readonly PlaceType[]>(selectedAddress ? [selectedAddress] : []);
   const loaded = React.useRef(false);
 
   if (typeof window !== 'undefined' && !loaded.current) {
@@ -97,6 +96,13 @@ export default function SelectAddress({ label, onSelect }: SelectAddressProps) {
       active = false;
     };
   }, [value, inputValue, fetch]);
+
+  React.useEffect(() => {
+    // Update internal state when selectedAddress prop changes
+    setValue(selectedAddress);
+    setInputValue(selectedAddress?.description || '');
+    setOptions(selectedAddress ? [selectedAddress] : []);
+  }, [selectedAddress]);
 
   return (
     <Autocomplete

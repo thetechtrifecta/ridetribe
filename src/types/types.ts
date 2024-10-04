@@ -1,3 +1,16 @@
+export interface User {
+  id: number;
+  clerkUserId: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  rides: Ride[];
+  kids: Kid[];
+  connections: User[];
+  connectedWith: User[];
+}
+
 export interface Kid {
     id: number;
     firstName: string;
@@ -5,6 +18,24 @@ export interface Kid {
     age: number;
     phone?: string; // Optional since it may not always be provided
   }
+
+export interface Ride {
+  id: number;
+  creator: User;
+  creatorId: number;
+  title?: string;
+  description?: string;
+  rideType: string;
+  pickupTime?: string;
+  pickupAddress: string;
+  dropoffAddress: string;
+  dropoffTime?: string;
+  wouldDrive: boolean;
+  seatsOffered: number;
+  wantRide: boolean;
+  seatsNeeded: number;
+  kids: Kid[];
+}
 
 export interface UserConnection {
     id: number;
@@ -31,4 +62,5 @@ export interface PlaceType {
 export interface SelectAddressProps {
   label: string;
   onSelect: React.Dispatch<React.SetStateAction<PlaceType | null>>;
+  selectedAddress?: PlaceType | null;
 }
