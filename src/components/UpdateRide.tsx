@@ -131,21 +131,12 @@ const UpdateRide = ({ ride, open, onClose, onSave }: Props) => {
                     </FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                         {rideType === 'to' ? (
-                            <DateTimePicker label="Dropoff Time" value={dropoffDateTime} onChange={setDropoffDateTime} renderInput={(params) => <TextField {...params} fullWidth />} />
+                            <DateTimePicker label="Dropoff Time" value={dropoffDateTime} onChange={setDropoffDateTime} />
                         ) : (
-                            <DateTimePicker label="Pickup Time" value={pickupDateTime} onChange={setPickupDateTime} renderInput={(params) => <TextField {...params} fullWidth />} />
+                            <DateTimePicker label="Pickup Time" value={pickupDateTime} onChange={setPickupDateTime} />
                         )}
                     </LocalizationProvider>
                     <SelectKids selected={selectedKids} onChange={setSelectedKids} />
-                    {/* <FormControl component="fieldset" fullWidth margin="normal">
-                    <FormLabel component="legend">Ride Preferences</FormLabel>
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <FormControlLabel control={<Checkbox checked={wouldDrive} onChange={(e) => setWouldDrive(e.target.checked)} />} label="Would Drive" />
-                        {wouldDrive && <TextField label="Seats Offered" type="number" fullWidth value={seatsOffered} onChange={(e) => setSeatsOffered(e.target.value)} margin="normal" />}
-                        <FormControlLabel control={<Checkbox checked={wantRide} onChange={(e) => setWantRide(e.target.checked)} />} label="Want Ride" />
-                        {wantRide && <TextField label="Seats Needed" type="number" fullWidth value={seatsNeeded} onChange={(e) => setSeatsNeeded(e.target.value)} margin="normal" />}
-                    </Box>
-                    </FormControl> */}
                     <FormControl component="fieldset" fullWidth margin="normal">
                     <FormLabel component="legend">Ride Preferences</FormLabel>
                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
