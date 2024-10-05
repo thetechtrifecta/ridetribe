@@ -149,7 +149,7 @@ const CreateRide = () => {
               />
             )}
           </Box>
-          <SelectKids onChange={setSelectedKids} />
+          <SelectKids selected={selectedKids} onChange={setSelectedKids} />
           <Box>
             <FormControl component="fieldset" sx={{ mt: 2, mb: 2 }} required fullWidth margin="normal">
               <FormLabel component="legend">Ride Preferences</FormLabel>
