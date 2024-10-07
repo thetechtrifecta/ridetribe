@@ -37,6 +37,10 @@ model Ride {
   wantRide        Boolean
   seatsNeeded     Int
   kids            Kid[]
+  eventToId       Int?       @unique
+  eventTo         Event?     @relation("ToRide", fields: [eventToId], references: [id])
+  eventFromId     Int?       @unique
+  eventFrom       Event?     @relation("FromRide", fields: [eventFromId], references: [id])
 }
 
 model Kid {
@@ -50,3 +54,11 @@ model Kid {
   phone           String?
 }
 
+model Event {
+  id            Int         @id @default(autoincrement())
+  title         String
+  toRideId      Int?        @unique
+  toRide        Ride?       @relation("ToRide")
+  fromRideId    Int?        @unique
+  fromRide      Ride?       @relation("FromRide")
+}
