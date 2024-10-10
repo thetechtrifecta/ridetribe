@@ -2,30 +2,30 @@
 
 import React, { useState, useEffect } from 'react';
 import { useUser } from "@clerk/nextjs";
-import { TextField, Button, Typography, Checkbox, FormControlLabel, Box, RadioGroup, Radio, FormControl, FormLabel } from '@mui/material';
+import { TextField, Button, Checkbox, FormControlLabel, Box, FormControl, FormLabel } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
-import Share from '@/components/Share';
 import SelectKids from '@/components/SelectKids';
 import { Kid, PlaceType } from '@/types/types';
 import SelectAddress from '@/components/SelectAddress';
 
-const CreateRide = () => {
+interface CreateRideProps {
+  eventTitle: string;
+  isEventTitleValid: boolean;
+  rideType: 'to' | 'from';
+}
+
+const CreateRide: React.FC<CreateRideProps> = ({ eventTitle, isEventTitleValid, rideType }) => {
   const { user } = useUser();
   const [wouldDrive, setWouldDrive] = useState(false);
   const [wantRide, setWantRide] = useState(false);
-  const [rideType, setRideType] = useState('');
   const [seatsOffered, setSeatsOffered] = useState('');
   const [seatsNeeded, setSeatsNeeded] = useState('');
   const [selectedKids, setSelectedKids] = useState<Kid[]>([]);
   const [pickupAddress, setPickupAddress] = useState<PlaceType | null>(null);
   const [dropoffAddress, setDropoffAddress] = useState<PlaceType | null>(null);  
-  const [description, setDescription] = useState('');
-  const [eventTitle, setEventTitle] = useState('');
-  const [isEventTitleValid, setEventTitleValid] = useState(true);
-  const [isDescriptionValid, setDescriptionValid] = useState(true);
   const [pickupDateTime, setPickupDateTime] = useState<Dayjs | null>(dayjs());
   const [dropoffDateTime, setDropoffDateTime] = useState<Dayjs | null>(dayjs());
 
@@ -35,18 +35,6 @@ const CreateRide = () => {
       setSeatsNeeded(selectedKids.length.toString());  // Automatically set seatsNeeded to the number of kids
     }
   }, [wantRide, selectedKids]);
-
-  const handleEventTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setEventTitle(value);
-    setEventTitleValid(value.length <= 20);
-  };
-
-  const handleDescriptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newDescription = event.target.value;
-    setDescription(newDescription);
-    setDescriptionValid(newDescription.length <= 100);
-  };
 
   const handleSeatsChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -59,11 +47,9 @@ const CreateRide = () => {
     setValid(!isNaN(numValue) && numValue >= 0 && numValue < 10); // Ensuring the seats are less than 10
   };  
 
-  const isFormValid = description.length <= 100 && isDescriptionValid && isEventTitleValid &&
-  eventTitle.length > 0 && (wouldDrive || wantRide) && pickupAddress && dropoffAddress &&
+  const isFormValid = eventTitle.length > 0 && isEventTitleValid && (wouldDrive || wantRide) && pickupAddress && dropoffAddress &&
   (!wouldDrive || (seatsOffered !== '' && parseInt(seatsOffered, 10) < 10)) &&
-  (!wantRide || (seatsNeeded !== '' && parseInt(seatsNeeded, 10) < 10)) &&
-  rideType !== '' && (pickupDateTime || dropoffDateTime);
+  (!wantRide || (seatsNeeded !== '' && parseInt(seatsNeeded, 10) < 10)) && (pickupDateTime || dropoffDateTime);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -76,7 +62,7 @@ const CreateRide = () => {
 
     const rideData = {
       eventTitle,
-      description,
+      rideType,
       pickupAddress: pickupAddress?.description,
       dropoffAddress: dropoffAddress?.description,
       pickupTime: pickupDateTime?.toISOString(),
@@ -87,7 +73,6 @@ const CreateRide = () => {
       seatsNeeded: wantRide ? parseInt(seatsNeeded, 10) : 0,
       kids: selectedKids.map(kid => kid.id),
       clerkUserId,
-      rideType
     };
 
     const response = await fetch('/api/ride/create', {
@@ -108,37 +93,17 @@ const CreateRide = () => {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Box
-        sx={{
-          my: 4,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h6">Create a Ride</Typography>
-        <Share />
-        <form onSubmit={handleSubmit}>
-          <TextField label="Ride Title" type="text" name="eventTitle" value={eventTitle} onChange={handleEventTitleChange} required fullWidth sx={{ mt: .25, mb: .25 }}
-            error={!isEventTitleValid} helperText={!isEventTitleValid ? "Title must be under 20 characters" : " "} />
-          <TextField label="Description" type="text" name="description" value={description} onChange={handleDescriptionChange} required fullWidth sx={{ mt: .25, mb: -1.5 }}
-            error={!isDescriptionValid} helperText={!isDescriptionValid ? "Description must be under 100 characters" : " "} />
+      <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', margin: 'auto', maxWidth: 500 }}>
           <SelectAddress label="Pickup Address" onSelect={setPickupAddress} />
           <SelectAddress label="Dropoff Address" onSelect={setDropoffAddress} />
-          <FormControl component="fieldset" required fullWidth margin="normal">
-            <FormLabel component="legend">Ride Direction</FormLabel>
-            <RadioGroup row name="rideType" value={rideType} onChange={(e) => setRideType(e.target.value)}>
-              <FormControlLabel value="to" control={<Radio />} label="To Event" />
-              <FormControlLabel value="from" control={<Radio />} label="From Event" />
-            </RadioGroup>
-          </FormControl>
-          <Box>
+          <Box sx={{ my: 2,width: '100%' }}>
             {rideType === 'to' && (
               <DateTimePicker
                 label="Dropoff Time"
                 value={dropoffDateTime}
                 onChange={setDropoffDateTime}
+                sx={{ width: '100%' }}
               />
             )}
             {rideType === 'from' && (
@@ -146,30 +111,47 @@ const CreateRide = () => {
                 label="Pickup Time"
                 value={pickupDateTime}
                 onChange={setPickupDateTime}
+                sx={{ width: '100%' }}
               />
             )}
           </Box>
           <SelectKids selected={selectedKids} onChange={setSelectedKids} />
-          <Box>
-            <FormControl component="fieldset" sx={{ mt: 2, mb: 2 }} required fullWidth margin="normal">
-              <FormLabel component="legend">Ride Preferences</FormLabel>
-              <FormControlLabel control={<Checkbox checked={wouldDrive} onChange={(e) => setWouldDrive(e.target.checked)} />} label="Would Drive" />
-              {wouldDrive && (
-                <TextField label="Seats Offered" type="number" name="seatsOffered" value={seatsOffered} onChange={(e) => handleSeatsChange(e, setSeatsOffered, (valid) => {})} required
-                  error={seatsOffered !== '' && parseInt(seatsOffered, 10) >= 10} helperText={seatsOffered !== '' && parseInt(seatsOffered, 10) >= 10 ? "Seats offered must be less than 10" : " "} />
-              )}
-              <FormControlLabel control={<Checkbox checked={wantRide} onChange={(e) => setWantRide(e.target.checked)} />} label="Want Ride" />
-              {wantRide && (
-                <TextField label="Seats Needed" type="number" name="seatsNeeded" value={seatsNeeded} onChange={(e) => handleSeatsChange(e, setSeatsNeeded, (valid) => {})} required
-                  error={seatsNeeded !== '' && parseInt(seatsNeeded, 10) >= 10} helperText={seatsNeeded !== '' && parseInt(seatsNeeded, 10) >= 10 ? "Seats needed must be less than 10" : " "} />
-              )}
-            </FormControl>
-          </Box>
+          <FormControl component="fieldset" sx={{ width: '100%', mt: 2, mb: 2 }}>
+            <FormLabel component="legend">Ride Preferences</FormLabel>
+            <FormControlLabel control={<Checkbox checked={wouldDrive} onChange={(e) => setWouldDrive(e.target.checked)} />} label="Would Drive" />
+            {wouldDrive && (
+              <TextField
+                label="Seats Offered"
+                type="number"
+                name="seatsOffered"
+                value={seatsOffered}
+                onChange={(e) => handleSeatsChange(e, setSeatsOffered, () => {})}
+                required
+                fullWidth
+                error={seatsOffered !== '' && parseInt(seatsOffered, 10) >= 10}
+                helperText={seatsOffered !== '' && parseInt(seatsOffered, 10) >= 10 ? "Seats offered must be less than 10" : " "}
+              />
+            )}
+            <FormControlLabel control={<Checkbox checked={wantRide} onChange={(e) => setWantRide(e.target.checked)} />} label="Want Ride" />
+            {wantRide && (
+              <TextField
+                label="Seats Needed"
+                type="number"
+                name="seatsNeeded"
+                value={seatsNeeded}
+                onChange={(e) => handleSeatsChange(e, setSeatsNeeded, () => {})}
+                required
+                fullWidth
+                error={seatsNeeded !== '' && parseInt(seatsNeeded, 10) >= 10}
+                helperText={seatsNeeded !== '' && parseInt(seatsNeeded, 10) >= 10 ? "Seats needed must be less than 10" : " "}
+              />
+            )}
+          </FormControl>
           <Button type="submit" variant="contained" color="primary" disabled={!isFormValid}>
             Submit
           </Button>
-        </form>
-      </Box>
+        </Box>
+      </form>
     </LocalizationProvider>
   );
 };

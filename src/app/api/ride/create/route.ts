@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
         const { clerkUserId, eventTitle, description, pickupAddress, dropoffAddress, rideType, pickupTime, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = rideData;
 
         // Validate all necessary fields based on rideType
-        if (!clerkUserId || !eventTitle || !description || !pickupAddress || !dropoffAddress || !rideType || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined || !Array.isArray(kids) ||
+        if (!clerkUserId || !eventTitle || !pickupAddress || !dropoffAddress || !rideType || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined || !Array.isArray(kids) ||
             (rideType === 'to' && !dropoffTime) || (rideType === 'from' && !pickupTime)) {
             return new NextResponse(JSON.stringify({ error: 'Missing required ride data' }), {
                 status: 400,
