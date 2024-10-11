@@ -43,7 +43,6 @@ export async function POST(req: NextRequest) {
         const ride = await prisma.ride.create({
             data: {
                 title: eventTitle,
-                description: description,
                 pickupAddress: pickupAddress,
                 dropoffAddress: dropoffAddress,
                 pickupTime: rideType === 'from' ? new Date(pickupTime) : null,
