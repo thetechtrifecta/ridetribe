@@ -39,10 +39,14 @@ const CreateRide: React.FC = () => {
     event: React.MouseEvent<HTMLElement, MouseEvent>, 
     newRideType: 'to' | 'from' | null
   ) => {
-    if (newRideType !== null) { // Prevent unselecting all toggles
+    if (newRideType !== null && newRideType !== rideType) { // Check if newRideType is different to avoid unnecessary actions
       setRideType(newRideType);
+  
+      // Swap the addresses unconditionally
+      setPickupAddress(dropoffAddress);
+      setDropoffAddress(pickupAddress);
     }
-  };
+  };  
 
   // Automatically update seatsNeeded when wantRide is selected and kids are chosen
   useEffect(() => {
@@ -109,19 +113,9 @@ const CreateRide: React.FC = () => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-        <Box
-          sx={{
-            my: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-          }}
-        >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', margin: 'auto', maxWidth: 500 }}>
           <Share />
           <Typography variant="h6" >Create a Ride</Typography>
-          <Box sx={{ width: '100%', maxWidth: 500, margin: 'auto', my: 2 }}>
             <ToggleButtonGroup
               color="primary"
               value={rideType}
@@ -134,24 +128,27 @@ const CreateRide: React.FC = () => {
               <ToggleButton value="to">To</ToggleButton>
               <ToggleButton value="from">From</ToggleButton>
             </ToggleButtonGroup>
-          </Box>
-          <Box sx={{ width: '100%', maxWidth: 500, mt: 2 }}>
-            <TextField 
-              fullWidth
-              label="Event Title" 
-              type="text" 
-              name="eventTitle" 
-              value={eventTitle} 
-              onChange={handleEventTitleChange} 
-              required
-              error={!isEventTitleValid} 
-              helperText={!isEventTitleValid ? "Title must be under 20 characters" : " "} 
-            />
-          </Box>
-        </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', margin: 'auto', maxWidth: 500 }}>
-          <SelectAddress label="Pickup Address" onSelect={setPickupAddress} />
-          <SelectAddress label="Dropoff Address" onSelect={setDropoffAddress} />
+          <TextField 
+            fullWidth
+            label="Event Title" 
+            type="text" 
+            name="eventTitle" 
+            value={eventTitle} 
+            onChange={handleEventTitleChange} 
+            required
+            error={!isEventTitleValid} 
+            helperText={!isEventTitleValid ? "Title must be under 20 characters" : " "} 
+          />
+          <SelectAddress
+            label="Pickup Address"
+            onSelect={setPickupAddress}
+            selectedAddress={pickupAddress}
+          />
+          <SelectAddress
+            label="Dropoff Address"
+            onSelect={setDropoffAddress}
+            selectedAddress={dropoffAddress}
+          />
           <Box sx={{ my: 2,width: '100%' }}>
             {rideType === 'to' && (
               <DateTimePicker
