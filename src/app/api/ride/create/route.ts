@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
         console.log('Received rideData:', rideData); // Logging the received data
 
         // Extract the clerkUserId and validate the rest of the ride data
-        const { clerkUserId, eventTitle, description, pickupAddress, dropoffAddress, rideType, pickupTime, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = rideData;
+        const { clerkUserId, eventTitle, pickupAddress, dropoffAddress, rideType, pickupTime, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = rideData;
 
         // Validate all necessary fields based on rideType
         if (!clerkUserId || !eventTitle || !pickupAddress || !dropoffAddress || !rideType || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined || !Array.isArray(kids) ||

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useUser } from "@clerk/nextjs";
-import { TextField, Button, Checkbox, FormControlLabel, Box, FormControl, FormLabel } from '@mui/material';
+import { Typography, TextField, Button, Checkbox, FormControlLabel, Box, FormControl, FormLabel } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -10,14 +10,11 @@ import dayjs, { Dayjs } from 'dayjs';
 import SelectKids from '@/components/SelectKids';
 import { Kid, PlaceType } from '@/types/types';
 import SelectAddress from '@/components/SelectAddress';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Share from '@/components/Share';
 
-interface CreateRideProps {
-  eventTitle: string;
-  isEventTitleValid: boolean;
-  rideType: 'to' | 'from';
-}
-
-const CreateRide: React.FC<CreateRideProps> = ({ eventTitle, isEventTitleValid, rideType }) => {
+const CreateRide: React.FC = () => {
   const { user } = useUser();
   const [wouldDrive, setWouldDrive] = useState(false);
   const [wantRide, setWantRide] = useState(false);
@@ -28,6 +25,24 @@ const CreateRide: React.FC<CreateRideProps> = ({ eventTitle, isEventTitleValid, 
   const [dropoffAddress, setDropoffAddress] = useState<PlaceType | null>(null);  
   const [pickupDateTime, setPickupDateTime] = useState<Dayjs | null>(dayjs());
   const [dropoffDateTime, setDropoffDateTime] = useState<Dayjs | null>(dayjs());
+  const [eventTitle, setEventTitle] = useState<string>(''); 
+  const [isEventTitleValid, setEventTitleValid] = useState(true);
+  const [rideType, setRideType] = useState<'to' | 'from'>('to');
+
+  const handleEventTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setEventTitle(value);
+    setEventTitleValid(value.length <= 20);
+  };
+
+  const handleRideTypeChange = (
+    event: React.MouseEvent<HTMLElement, MouseEvent>, 
+    newRideType: 'to' | 'from' | null
+  ) => {
+    if (newRideType !== null) { // Prevent unselecting all toggles
+      setRideType(newRideType);
+    }
+  };
 
   // Automatically update seatsNeeded when wantRide is selected and kids are chosen
   useEffect(() => {
@@ -67,11 +82,11 @@ const CreateRide: React.FC<CreateRideProps> = ({ eventTitle, isEventTitleValid, 
       dropoffAddress: dropoffAddress?.description,
       pickupTime: pickupDateTime?.toISOString(),
       dropoffTime: dropoffDateTime?.toISOString(),
+      kids: selectedKids.map(kid => kid.id),
       wouldDrive,
       seatsOffered: wouldDrive ? parseInt(seatsOffered, 10) : 0,
       wantRide,
       seatsNeeded: wantRide ? parseInt(seatsNeeded, 10) : 0,
-      kids: selectedKids.map(kid => kid.id),
       clerkUserId,
     };
 
@@ -94,6 +109,46 @@ const CreateRide: React.FC<CreateRideProps> = ({ eventTitle, isEventTitleValid, 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+        <Box
+          sx={{
+            my: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <Share />
+          <Typography variant="h6" >Create a Ride</Typography>
+          <Box sx={{ width: '100%', maxWidth: 500, margin: 'auto', my: 2 }}>
+            <ToggleButtonGroup
+              color="primary"
+              value={rideType}
+              exclusive
+              onChange={handleRideTypeChange}
+              aria-label="Ride Direction"
+              fullWidth
+              sx={{my: 2 }}
+            >
+              <ToggleButton value="to">To</ToggleButton>
+              <ToggleButton value="from">From</ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+          <Box sx={{ width: '100%', maxWidth: 500, mt: 2 }}>
+            <TextField 
+              fullWidth
+              label="Event Title" 
+              type="text" 
+              name="eventTitle" 
+              value={eventTitle} 
+              onChange={handleEventTitleChange} 
+              required
+              error={!isEventTitleValid} 
+              helperText={!isEventTitleValid ? "Title must be under 20 characters" : " "} 
+            />
+          </Box>
+        </Box>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', margin: 'auto', maxWidth: 500 }}>
           <SelectAddress label="Pickup Address" onSelect={setPickupAddress} />
           <SelectAddress label="Dropoff Address" onSelect={setDropoffAddress} />
