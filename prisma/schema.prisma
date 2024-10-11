@@ -26,7 +26,6 @@ model Ride {
   creator         User       @relation(fields: [creatorId], references: [id])
   creatorId       Int
   title           String?
-  description     String?
   rideType        String
   pickupTime      DateTime?
   pickupAddress   String
