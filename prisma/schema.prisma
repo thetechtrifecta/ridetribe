@@ -25,7 +25,7 @@ model Ride {
   id              Int        @id @default(autoincrement())
   creator         User       @relation(fields: [creatorId], references: [id])
   creatorId       Int
-  title           String?
+  eventTitle           String?
   rideType        String
   pickupTime      DateTime?
   pickupAddress   String
