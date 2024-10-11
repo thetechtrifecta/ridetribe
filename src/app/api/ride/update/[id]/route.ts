@@ -6,12 +6,12 @@ const prisma = new PrismaClient();
 export async function PUT(req: NextRequest) {
     try {
         const id = req.nextUrl.pathname.split('/').pop();
-        const { title, rideType, pickupTime, dropoffTime, pickupAddress, dropoffAddress, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = await req.json();
+        const { eventTitle, rideType, pickupTime, dropoffTime, pickupAddress, dropoffAddress, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = await req.json();
 
         const updatedRide = await prisma.ride.update({
             where: { id: parseInt(id || '0') },
             data: {
-                title,
+                eventTitle,
                 rideType,
                 pickupTime: new Date(pickupTime),
                 dropoffTime: new Date(dropoffTime),

@@ -23,7 +23,7 @@ export interface Ride {
   id: number;
   creator: User;
   creatorId: number;
-  title?: string;
+  eventTitle?: string;
   rideType: string;
   pickupTime?: string;
   pickupAddress: string;

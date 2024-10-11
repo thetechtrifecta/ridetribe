@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         // Create the ride, linking it to the user and associating the kids
         const ride = await prisma.ride.create({
             data: {
-                title: eventTitle,
+                eventTitle: eventTitle,
                 pickupAddress: pickupAddress,
                 dropoffAddress: dropoffAddress,
                 pickupTime: rideType === 'from' ? new Date(pickupTime) : null,

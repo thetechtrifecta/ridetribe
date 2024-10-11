@@ -43,7 +43,7 @@ const RidesList = () => {
             {rides.map((ride) => (
                 <Paper key={ride.id} elevation={3} sx={{ margin: 2, padding: 2, backgroundColor: '#f5f5f5' }}>
                     <Typography variant="h6" gutterBottom>
-                        {ride.title ? `Event Title: ${ride.title}` : ''}
+                        {ride.eventTitle ? `Event Title: ${ride.eventTitle}` : ''}
                     </Typography>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
