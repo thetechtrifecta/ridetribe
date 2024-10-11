@@ -1,21 +1,32 @@
-"use client"
-
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Paper, Grid, Button } from '@mui/material';
+import { Box, Typography, Grid, Paper, useTheme } from '@mui/material';
+import EventNoteIcon from '@mui/icons-material/EventNote'; // Icon for event note
+import RenderRideDetails from './RenderRideDetails';
 import UpdateRide from './UpdateRide';
-import DeleteRide from './DeleteRide';
-import { Ride } from '@/types/types';
+import { Ride, GroupedRides } from '@/types/types';
 
-const RidesList = () => {
-    const [rides, setRides] = useState<Ride[]>([]);
+const RidesList: React.FC = () => {
+    const [rides, setRides] = useState<GroupedRides[]>([]);
     const [selectedRide, setSelectedRide] = useState<Ride | null>(null);
     const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+    const theme = useTheme(); // Access the theme for consistent styling
 
     const fetchRides = async () => {
         const response = await fetch('/api/rides');
         if (response.ok) {
-            const data = await response.json();
-            setRides(data);
+            const data: Ride[] = await response.json();
+            const groupedRides = data.reduce<{ [key: string]: GroupedRides }>((acc, ride) => {
+                const date = ride.pickupTime ? new Date(ride.pickupTime).toDateString() : 
+                            ride.dropoffTime ? new Date(ride.dropoffTime).toDateString() : 'undated';
+                const key = `${ride.eventTitle}-${date}`;
+                if (!acc[key]) {
+                    acc[key] = { to: null, from: null, eventTitle: ride.eventTitle, date };
+                }
+                if (ride.rideType === 'to') acc[key].to = ride;
+                if (ride.rideType === 'from') acc[key].from = ride;
+                return acc;
+            }, {});
+            setRides(Object.values(groupedRides));
         }
     };
 
@@ -40,68 +51,30 @@ const RidesList = () => {
 
     return (
         <Box sx={{ margin: 2 }}>
-            {rides.map((ride) => (
-                <Paper key={ride.id} elevation={3} sx={{ margin: 2, padding: 2, backgroundColor: '#f5f5f5' }}>
-                    <Typography variant="h6" gutterBottom>
-                        {ride.eventTitle ? `Event Title: ${ride.eventTitle}` : ''}
-                    </Typography>
-                    <Grid container spacing={2}>
+            {rides.map((group, index) => (
+                <Box key={index} sx={{ marginBottom: 4 }}>
+                    <Paper elevation={2} sx={{
+                        padding: 2,
+                        backgroundColor: theme.palette.background.default,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center', // This centers the children horizontally
+                        gap: theme.spacing(1)
+                    }}>
+                        <EventNoteIcon sx={{ color: theme.palette.primary.main }} />
+                        <Typography variant="h6">
+                            {group.eventTitle} - {new Date(group.date).toLocaleDateString()}
+                        </Typography>
+                    </Paper>
+                    <Grid container spacing={2} justifyContent="space-around">
                         <Grid item xs={12} sm={6}>
-                            <Typography variant="subtitle1">Ride Type:</Typography>
-                            <Typography variant="body1">{ride.rideType}</Typography>
+                            {group.to && <RenderRideDetails ride={group.to} onOpenUpdateDialog={handleOpenUpdateDialog} />}
                         </Grid>
-                        {ride.rideType === 'from' && ride.pickupTime && (
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1">Pickup Time:</Typography>
-                                <Typography variant="body1">{new Date(ride.pickupTime).toLocaleString()}</Typography>
-                            </Grid>
-                        )}
-                        {ride.rideType === 'to' && ride.dropoffTime && (
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1">Dropoff Time:</Typography>
-                                <Typography variant="body1">{new Date(ride.dropoffTime).toLocaleString()}</Typography>
-                            </Grid>
-                        )}
-                        {ride.pickupAddress && (
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1">Pickup Address:</Typography>
-                                <Typography variant="body1">{ride.pickupAddress}</Typography>
-                            </Grid>
-                        )}
-                        {ride.dropoffAddress && (
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1">Dropoff Address:</Typography>
-                                <Typography variant="body1">{ride.dropoffAddress}</Typography>
-                            </Grid>
-                        )}
-                        {ride.wouldDrive && (
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1">Would Drive:</Typography>
-                                <Typography variant="body1">Yes, offering {ride.seatsOffered || '0'} seats</Typography>
-                            </Grid>
-                        )}
-                        {ride.wantRide && (
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1">Want Ride:</Typography>
-                                <Typography variant="body1">Needs {ride.seatsNeeded || '0'} seats</Typography>
-                            </Grid>
-                        )}
-                        {ride.kids && ride.kids.length > 0 && (
-                            <Grid item xs={12}>
-                                <Typography variant="subtitle1">Kids:</Typography>
-                                <Typography variant="body1">
-                                    {ride.kids.map(kid => kid.firstName + ' ' + kid.lastName).join(', ')}
-                                </Typography>
-                            </Grid>
-                        )}
-                        <Grid item xs={12}>
-                            <Button onClick={() => handleOpenUpdateDialog(ride)} variant="contained" color="primary">
-                                Update
-                            </Button>
-                            <DeleteRide rideId={ride.id} />
+                        <Grid item xs={12} sm={6}>
+                            {group.from && <RenderRideDetails ride={group.from} onOpenUpdateDialog={handleOpenUpdateDialog} />}
                         </Grid>
                     </Grid>
-                </Paper>
+                </Box>
             ))}
             {selectedRide && (
                 <UpdateRide

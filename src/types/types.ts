@@ -19,6 +19,13 @@ export interface Kid {
     phone?: string; // Optional since it may not always be provided
   }
 
+export interface GroupedRides {
+    to?: Ride | null;
+    from?: Ride | null;
+    eventTitle?: string;
+    date: string;
+}
+
 export interface Ride {
   id: number;
   creator: User;
