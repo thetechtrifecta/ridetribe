@@ -16,7 +16,6 @@ type Props = {
 
 const UpdateRide = ({ ride, open, onClose, onSave }: Props) => {
     const [title, setTitle] = useState(ride.title);
-    const [description, setDescription] = useState(ride.description);
     const [rideType, setRideType] = useState(ride.rideType);
     const [pickupAddress, setPickupAddress] = useState<PlaceType | null>({
         description: ride.pickupAddress,
@@ -84,7 +83,6 @@ const UpdateRide = ({ ride, open, onClose, onSave }: Props) => {
     
         const payload = {
             title,
-            description,
             pickupAddress: pickupAddress?.description,
             dropoffAddress: dropoffAddress?.description,
             pickupTime: pickupDateTime?.isValid() ? pickupDateTime.toISOString() : null,
@@ -119,7 +117,6 @@ const UpdateRide = ({ ride, open, onClose, onSave }: Props) => {
                 <Box component="form" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                     <Typography variant="h6" gutterBottom>Update Ride</Typography>
                     <TextField margin="dense" label="Event Title" type="text" fullWidth variant="outlined" value={title} onChange={(e) => setTitle(e.target.value)} />
-                    <TextField margin="dense" label="Description" type="text" fullWidth multiline rows={4} variant="outlined" value={description} onChange={(e) => setDescription(e.target.value)} />
                     <SelectAddress label="Pickup Address" selectedAddress={pickupAddress || null} onSelect={setPickupAddress} />
                     <SelectAddress label="Dropoff Address" selectedAddress={dropoffAddress || null} onSelect={setDropoffAddress} />
                     <FormControl component="fieldset" fullWidth margin="normal">

@@ -43,17 +43,11 @@ const RidesList = () => {
             {rides.map((ride) => (
                 <Paper key={ride.id} elevation={3} sx={{ margin: 2, padding: 2, backgroundColor: '#f5f5f5' }}>
                     <Typography variant="h6" gutterBottom>
-                        {ride.title ? `Ride Title: ${ride.title}` : ''}
+                        {ride.title ? `Event Title: ${ride.title}` : ''}
                     </Typography>
                     <Grid container spacing={2}>
-                        {ride.description && (
-                            <Grid item xs={12} sm={6}>
-                                <Typography variant="subtitle1">Description:</Typography>
-                                <Typography variant="body1">{ride.description}</Typography>
-                            </Grid>
-                        )}
                         <Grid item xs={12} sm={6}>
-                            <Typography variant="subtitle1">Type:</Typography>
+                            <Typography variant="subtitle1">Ride Type:</Typography>
                             <Typography variant="body1">{ride.rideType}</Typography>
                         </Grid>
                         {ride.rideType === 'from' && ride.pickupTime && (

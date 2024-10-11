@@ -24,7 +24,6 @@ export interface Ride {
   creator: User;
   creatorId: number;
   title?: string;
-  description?: string;
   rideType: string;
   pickupTime?: string;
   pickupAddress: string;

@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export async function PUT(req: NextRequest) {
     try {
         const id = req.nextUrl.pathname.split('/').pop();
-        const { title, rideType, pickupTime, dropoffTime, pickupAddress, dropoffAddress, wouldDrive, seatsOffered, wantRide, seatsNeeded, description, kids } = await req.json();
+        const { title, rideType, pickupTime, dropoffTime, pickupAddress, dropoffAddress, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = await req.json();
 
         const updatedRide = await prisma.ride.update({
             where: { id: parseInt(id || '0') },
@@ -21,7 +21,6 @@ export async function PUT(req: NextRequest) {
                 seatsNeeded: parseInt(seatsNeeded),
                 wouldDrive,
                 wantRide,
-                description,
                 kids: {
                     set: kids.map((kidId: number) => ({ id: kidId }))
                 }
