@@ -103,7 +103,7 @@ const CreateRide: React.FC = () => {
     });
 
     if (response.ok) {
-      alert('Ride created successfully.');
+      alert(`One-way Ride created for ${eventTitle}`);
     } else {
       const error = await response.text();
       console.error('Failed to create ride:', error);
