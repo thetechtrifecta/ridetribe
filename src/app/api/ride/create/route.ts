@@ -10,11 +10,11 @@ export async function POST(req: NextRequest) {
         console.log('Received rideData:', rideData); // Logging the received data
 
         // Extract the clerkUserId and validate the rest of the ride data
-        const { clerkUserId, eventTitle, pickupAddress, dropoffAddress, rideType, pickupTime, dropoffTime, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = rideData;
+        const { clerkUserId, pickupAddress, dropoffAddress, rideType, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = rideData;
 
         // Validate all necessary fields based on rideType
-        if (!clerkUserId || !eventTitle || !pickupAddress || !dropoffAddress || !rideType || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined || !Array.isArray(kids) ||
-            (rideType === 'to' && !dropoffTime) || (rideType === 'from' && !pickupTime)) {
+        if (!clerkUserId || !pickupAddress || !dropoffAddress || !rideType || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined || !Array.isArray(kids) ||
+            !(rideType === 'to' || rideType === 'from')) {
             return new NextResponse(JSON.stringify({ error: 'Missing required ride data' }), {
                 status: 400,
                 headers: {
@@ -42,11 +42,8 @@ export async function POST(req: NextRequest) {
         // Create the ride, linking it to the user and associating the kids
         const ride = await prisma.ride.create({
             data: {
-                eventTitle: eventTitle,
                 pickupAddress: pickupAddress,
                 dropoffAddress: dropoffAddress,
-                pickupTime: rideType === 'from' ? new Date(pickupTime) : null,
-                dropoffTime: rideType === 'to' ? new Date(dropoffTime) : null,
                 rideType,
                 wouldDrive: wouldDrive,
                 seatsOffered: seatsOffered,
