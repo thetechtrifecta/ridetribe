@@ -25,21 +25,17 @@ model Ride {
   id              Int        @id @default(autoincrement())
   creator         User       @relation(fields: [creatorId], references: [id])
   creatorId       Int
-  eventTitle           String?
   rideType        String
-  pickupTime      DateTime?
   pickupAddress   String
   dropoffAddress  String
-  dropoffTime     DateTime?
   wouldDrive      Boolean
   seatsOffered    Int
   wantRide        Boolean
   seatsNeeded     Int
   kids            Kid[]
-  eventToId       Int?       @unique
-  eventTo         Event?     @relation("ToRide", fields: [eventToId], references: [id])
-  eventFromId     Int?       @unique
-  eventFrom       Event?     @relation("FromRide", fields: [eventFromId], references: [id])
+  eventId         Int?        @unique
+  event           Event?      @relation(fields: [eventId], references: [id])
+  @@unique([eventId, rideType])
 }
 
 model Kid {
@@ -56,8 +52,8 @@ model Kid {
 model Event {
   id            Int         @id @default(autoincrement())
   title         String
-  toRideId      Int?        @unique
-  toRide        Ride?       @relation("ToRide")
-  fromRideId    Int?        @unique
-  fromRide      Ride?       @relation("FromRide")
+  address       String
+  startTime     DateTime
+  endTime       DateTime
+  rides         Ride[]
 }
