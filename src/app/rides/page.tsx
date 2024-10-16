@@ -8,7 +8,7 @@ const Rides: React.FC = () => {
   return (
     <>
       <CreateRide />
-      <RidesList />
+      {/* <RidesList /> */}
     </>
   );
 };

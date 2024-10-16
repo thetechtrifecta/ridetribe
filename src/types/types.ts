@@ -19,23 +19,20 @@ export interface Kid {
     phone?: string; // Optional since it may not always be provided
   }
 
-export interface GroupedRides {
-    to?: Ride | null;
-    from?: Ride | null;
-    eventTitle?: string;
-    date: string;
-}
+// export interface GroupedRides {
+//     to?: Ride | null;
+//     from?: Ride | null;
+//     eventTitle?: string;
+//     date: string;
+// }
 
 export interface Ride {
   id: number;
   creator: User;
   creatorId: number;
-  eventTitle?: string;
   rideType: string;
-  pickupTime?: string;
   pickupAddress: string;
   dropoffAddress: string;
-  dropoffTime?: string;
   wouldDrive: boolean;
   seatsOffered: number;
   wantRide: boolean;

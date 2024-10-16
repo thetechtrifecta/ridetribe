@@ -15,7 +15,6 @@ type Props = {
 };
 
 const UpdateRide = ({ ride, open, onClose, onSave }: Props) => {
-    const [eventTitle, setEventTitle] = useState(ride.eventTitle);
     const [rideType, setRideType] = useState(ride.rideType);
     const [pickupAddress, setPickupAddress] = useState<PlaceType | null>({
         description: ride.pickupAddress,
@@ -25,8 +24,6 @@ const UpdateRide = ({ ride, open, onClose, onSave }: Props) => {
         description: ride.dropoffAddress,
         structured_formatting: { main_text: ride.dropoffAddress, secondary_text: "" }
     });
-    const [pickupDateTime, setPickupDateTime] = useState<Dayjs | null>(ride.pickupTime ? dayjs(ride.pickupTime) : null);
-    const [dropoffDateTime, setDropoffDateTime] = useState<Dayjs | null>(ride.dropoffTime ? dayjs(ride.dropoffTime) : null);
     const [wouldDrive, setWouldDrive] = useState(ride.wouldDrive);
     const [wantRide, setWantRide] = useState(ride.wantRide);
     const [seatsOffered, setSeatsOffered] = useState(ride.seatsOffered ? ride.seatsOffered.toString() : '');
@@ -82,11 +79,8 @@ const UpdateRide = ({ ride, open, onClose, onSave }: Props) => {
         }
     
         const payload = {
-            eventTitle,
             pickupAddress: pickupAddress?.description,
             dropoffAddress: dropoffAddress?.description,
-            pickupTime: pickupDateTime?.isValid() ? pickupDateTime.toISOString() : null,
-            dropoffTime: dropoffDateTime?.isValid() ? dropoffDateTime.toISOString() : null,
             wouldDrive,
             seatsOffered: wouldDrive ? parseInt(seatsOffered) : 0, // Ensure we handle integer conversion properly
             wantRide,
@@ -116,7 +110,6 @@ const UpdateRide = ({ ride, open, onClose, onSave }: Props) => {
             <DialogContent>
                 <Box component="form" onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
                     <Typography variant="h6" gutterBottom>Update Ride</Typography>
-                    <TextField margin="dense" label="Event Title" type="text" fullWidth variant="outlined" value={eventTitle} onChange={(e) => setEventTitle(e.target.value)} />
                     <SelectAddress label="Pickup Address" selectedAddress={pickupAddress || null} onSelect={setPickupAddress} />
                     <SelectAddress label="Dropoff Address" selectedAddress={dropoffAddress || null} onSelect={setDropoffAddress} />
                     <FormControl component="fieldset" fullWidth margin="normal">

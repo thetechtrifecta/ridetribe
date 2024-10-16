@@ -25,15 +25,7 @@ const CreateRide: React.FC = () => {
   const [dropoffAddress, setDropoffAddress] = useState<PlaceType | null>(null);  
   const [pickupDateTime, setPickupDateTime] = useState<Dayjs | null>(dayjs());
   const [dropoffDateTime, setDropoffDateTime] = useState<Dayjs | null>(dayjs());
-  const [eventTitle, setEventTitle] = useState<string>(''); 
-  const [isEventTitleValid, setEventTitleValid] = useState(true);
   const [rideType, setRideType] = useState<'to' | 'from'>('to');
-
-  const handleEventTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setEventTitle(value);
-    setEventTitleValid(value.length <= 20);
-  };
 
   const handleRideTypeChange = (
     event: React.MouseEvent<HTMLElement, MouseEvent>, 
@@ -66,7 +58,7 @@ const CreateRide: React.FC = () => {
     setValid(!isNaN(numValue) && numValue >= 0 && numValue < 10); // Ensuring the seats are less than 10
   };  
 
-  const isFormValid = eventTitle.length > 0 && isEventTitleValid && (wouldDrive || wantRide) && pickupAddress && dropoffAddress &&
+  const isFormValid = (wouldDrive || wantRide) && pickupAddress && dropoffAddress &&
   (!wouldDrive || (seatsOffered !== '' && parseInt(seatsOffered, 10) < 10)) &&
   (!wantRide || (seatsNeeded !== '' && parseInt(seatsNeeded, 10) < 10)) && (pickupDateTime || dropoffDateTime);
 
@@ -80,12 +72,9 @@ const CreateRide: React.FC = () => {
     }
 
     const rideData = {
-      eventTitle,
       rideType,
       pickupAddress: pickupAddress?.description,
       dropoffAddress: dropoffAddress?.description,
-      pickupTime: pickupDateTime?.toISOString(),
-      dropoffTime: dropoffDateTime?.toISOString(),
       kids: selectedKids.map(kid => kid.id),
       wouldDrive,
       seatsOffered: wouldDrive ? parseInt(seatsOffered, 10) : 0,
@@ -103,7 +92,7 @@ const CreateRide: React.FC = () => {
     });
 
     if (response.ok) {
-      alert(`One-way Ride created for ${eventTitle}`);
+      alert(`One-way Ride created`);
     } else {
       const error = await response.text();
       console.error('Failed to create ride:', error);
@@ -128,17 +117,6 @@ const CreateRide: React.FC = () => {
               <ToggleButton value="to">To</ToggleButton>
               <ToggleButton value="from">From</ToggleButton>
             </ToggleButtonGroup>
-          <TextField 
-            fullWidth
-            label="Event Title" 
-            type="text" 
-            name="eventTitle" 
-            value={eventTitle} 
-            onChange={handleEventTitleChange} 
-            required
-            error={!isEventTitleValid} 
-            helperText={!isEventTitleValid ? "Title must be under 20 characters" : " "} 
-          />
           <SelectAddress
             label="Pickup Address"
             onSelect={setPickupAddress}

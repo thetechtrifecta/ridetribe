@@ -11,23 +11,23 @@ interface RenderRideDetailsProps {
 const RenderRideDetails: React.FC<RenderRideDetailsProps> = ({ ride, onOpenUpdateDialog }) => (
     <Paper elevation={3} sx={{ margin: 2, padding: 2, backgroundColor: '#f5f5f5' }}>
         <Typography variant="h6" gutterBottom>
-            {ride.eventTitle ? `Event Title: ${ride.eventTitle}` : ''}
+            [Event Title]
         </Typography>
         <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle1">Ride Type:</Typography>
                 <Typography variant="body1">{ride.rideType}</Typography>
             </Grid>
-            {ride.rideType === 'from' && ride.pickupTime && (
+            {ride.rideType === 'from' && (
                 <Grid item xs={12} sm={6}>
                     <Typography variant="subtitle1">Pickup Time:</Typography>
-                    <Typography variant="body1">{new Date(ride.pickupTime).toLocaleString()}</Typography>
+                    {/* <Typography variant="body1">{new Date(ride.pickupTime).toLocaleString()}</Typography> */}
                 </Grid>
             )}
-            {ride.rideType === 'to' && ride.dropoffTime && (
+            {ride.rideType === 'to' && (
                 <Grid item xs={12} sm={6}>
                     <Typography variant="subtitle1">Dropoff Time:</Typography>
-                    <Typography variant="body1">{new Date(ride.dropoffTime).toLocaleString()}</Typography>
+                    {/* <Typography variant="body1">{new Date(ride.dropoffTime).toLocaleString()}</Typography> */}
                 </Grid>
             )}
             {ride.pickupAddress && (
