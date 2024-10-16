@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, Box, Typography, TextField, Button, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel, Checkbox } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import dayjs, { Dayjs } from 'dayjs';
 import { Ride, PlaceType, Kid } from '@/types/types';
 import SelectAddress from '@/components/SelectAddress';
 import SelectKids from '@/components/SelectKids';
@@ -119,13 +116,6 @@ const UpdateRide = ({ ride, open, onClose, onSave }: Props) => {
                             <FormControlLabel value="from" control={<Radio />} label="From Event" />
                         </RadioGroup>
                     </FormControl>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        {rideType === 'to' ? (
-                            <DateTimePicker label="Dropoff Time" value={dropoffDateTime} onChange={setDropoffDateTime} />
-                        ) : (
-                            <DateTimePicker label="Pickup Time" value={pickupDateTime} onChange={setPickupDateTime} />
-                        )}
-                    </LocalizationProvider>
                     <SelectKids selected={selectedKids} onChange={setSelectedKids} />
                     <FormControl component="fieldset" fullWidth margin="normal">
                     <FormLabel component="legend">Ride Preferences</FormLabel>
