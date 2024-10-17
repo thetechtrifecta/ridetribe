@@ -15,6 +15,7 @@ model User {
   firstName     String
   lastName      String
   phone         String
+  events        Event[]
   rides         Ride[]
   kids          Kid[]
   connections   User[]       @relation("UserConnections")
@@ -51,6 +52,8 @@ model Kid {
 
 model Event {
   id            Int         @id @default(autoincrement())
+  creator       User        @relation(fields: [creatorId], references: [id])
+  creatorId     Int
   title         String
   address       String
   startTime     DateTime
