@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from "@clerk/nextjs";
 import { Typography, TextField, Button, Checkbox, FormControlLabel, Box, FormControl, FormLabel } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import SelectKids from '@/components/SelectKids';
 import { Kid, PlaceType } from '@/types/types';
 import SelectAddress from '@/components/SelectAddress';

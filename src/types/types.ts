@@ -5,6 +5,7 @@ export interface User {
   firstName: string;
   lastName: string;
   phone: string;
+  events: Event[];
   rides: Ride[];
   kids: Kid[];
   connections: User[];
@@ -13,18 +14,24 @@ export interface User {
 
 export interface Kid {
     id: number;
+    creator: User;
+    creatorId: number;
     firstName: string;
     lastName: string;
     age: number;
     phone?: string; // Optional since it may not always be provided
   }
 
-// export interface GroupedRides {
-//     to?: Ride | null;
-//     from?: Ride | null;
-//     eventTitle?: string;
-//     date: string;
-// }
+export interface Event {
+  id: number;
+  creator: User;
+  creatorId: number;
+  title: string;
+  address: string;
+  startTime: Date;
+  endTime: Date;
+  rides: Ride[];
+}
 
 export interface Ride {
   id: number;
