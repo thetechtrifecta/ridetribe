@@ -34,7 +34,7 @@ model Ride {
   wantRide        Boolean
   seatsNeeded     Int
   kids            Kid[]
-  eventId         Int?        @unique
+  eventId         Int?
   event           Event?      @relation(fields: [eventId], references: [id])
   @@unique([eventId, rideType])
 }
