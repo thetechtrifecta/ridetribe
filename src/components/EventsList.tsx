@@ -35,7 +35,7 @@ const EventsList: React.FC = () => {
     <Box sx={{ margin: 4 }}>
       {events.map((event) => (
         <Box key={event.id} sx={{ marginBottom: 4, border: '1px solid grey', borderRadius: '5px', overflow: 'hidden' }}>
-          <Typography variant="h5" sx={{ width: '100%', backgroundColor: 'primary.main', color: 'white', padding: 2 }}>
+          <Typography variant="h5" sx={{ width: '100%', backgroundColor: 'secondary.main', color: 'white', padding: 2 }}>
             {event.title} - {dayjs(event.startTime).format('MMM DD, YYYY')}
           </Typography>
           <Grid container spacing={2} sx={{ padding: 2 }}>
