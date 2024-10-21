@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, Grid } from '@mui/material';
 import dayjs from 'dayjs';
-import { Event } from '@/types/types'; 
+import { Event } from '@/types/types';
 
 const EventsList: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -36,27 +36,30 @@ const EventsList: React.FC = () => {
       {events.map((event) => (
         <Box key={event.id} sx={{ marginBottom: 4, border: '1px solid grey', borderRadius: '5px', overflow: 'hidden' }}>
           <Typography variant="h5" sx={{ width: '100%', backgroundColor: 'secondary.main', color: 'white', padding: 2 }}>
-            {event.title} - {dayjs(event.startTime).format('MMM DD, YYYY')}
+            {`${event.title} on ${dayjs(event.startTime).format('MMMM DD')} at ${event.address.split(',')[0]} from ${dayjs(event.startTime).format('h:mm A')} to ${dayjs(event.endTime).format('h:mm A')}`}
           </Typography>
           <Grid container spacing={2} sx={{ padding: 2 }}>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" sx={{ marginBottom: 2, textAlign: 'left' }}>From:</Typography>
-              {event.rides.filter(ride => ride.rideType === 'from').map(ride => (
-                <Box key={ride.id} sx={{ marginBottom: 1 }}>
-                  <Typography variant="subtitle1">Pickup: {ride.pickupAddress}</Typography>
-                  <Typography variant="subtitle1">Dropoff: {ride.dropoffAddress}</Typography>
-                </Box>
-              ))}
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Typography variant="h6" sx={{ marginBottom: 2, textAlign: 'left' }}>To:</Typography>
-              {event.rides.filter(ride => ride.rideType === 'to').map(ride => (
-                <Box key={ride.id} sx={{ marginBottom: 1 }}>
-                  <Typography variant="subtitle1">Pickup: {ride.pickupAddress}</Typography>
-                  <Typography variant="subtitle1">Dropoff: {ride.dropoffAddress}</Typography>
-                </Box>
-              ))}
-            </Grid>
+            {event.rides.map(ride => (
+              <Grid item xs={12} md={6} key={ride.id}>
+                <Typography variant="h6" sx={{ marginBottom: 2 }}>
+                  {ride.rideType === 'to' ? 'To Ride:' : 'From Ride:'}
+                </Typography>
+                <Typography variant="subtitle1">{ride.rideType === 'to' ? `Pickup: ${ride.pickupAddress}` : `Dropoff: ${ride.dropoffAddress}`}</Typography>
+                {ride.wouldDrive && (
+                  <Typography variant="subtitle1">Would Drive - Seats Offered: {ride.seatsOffered}</Typography>
+                )}
+                {ride.wantRide && (
+                  <Typography variant="subtitle1">Wants Ride - Seats Needed: {ride.seatsNeeded}</Typography>
+                )}
+                {ride.kids?.length > 0 && (
+                  ride.kids.map(kid => (
+                    <Typography variant="subtitle1" key={kid.id}>
+                      Kids: {kid.firstName} {kid.lastName} {kid.phone ? `- Phone: ${kid.phone}` : ''}
+                    </Typography>
+                  ))
+                )}
+              </Grid>
+            ))}
           </Grid>
         </Box>
       ))}

@@ -24,7 +24,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
         const events = await prisma.event.findMany({
             where: { creatorId: pgUser.id },
             include: {
-                rides: true // Include rides associated with each event
+                rides: {
+                    include: {
+                        kids: true,  // Include 'kids' relationship in each ride
+                        creator: true // Optionally include ride creator information if needed
+                    }
+                }
             }
         });
 
