@@ -45,6 +45,8 @@ export interface Ride {
   wantRide: boolean;
   seatsNeeded: number;
   kids: Kid[];
+  eventId?: number;
+  event?: Event;
 }
 
 export interface UserConnection {
