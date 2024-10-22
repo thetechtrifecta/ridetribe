@@ -10,11 +10,11 @@ export async function POST(req: NextRequest) {
         console.log('Received rideData:', rideData); // Logging the received data
 
         // Extract the clerkUserId and validate the rest of the ride data
-        const { clerkUserId, pickupAddress, dropoffAddress, rideType, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids } = rideData;
+        const { clerkUserId, pickupAddress, dropoffAddress, rideType, wouldDrive, seatsOffered, wantRide, seatsNeeded, kids, eventId } = rideData;
 
         // Validate all necessary fields based on rideType
         if (!clerkUserId || !pickupAddress || !dropoffAddress || !rideType || wouldDrive === undefined || seatsOffered === undefined || wantRide === undefined || seatsNeeded === undefined || !Array.isArray(kids) ||
-            !(rideType === 'to' || rideType === 'from')) {
+            !(rideType === 'to' || rideType === 'from') || !eventId) {
             return new NextResponse(JSON.stringify({ error: 'Missing required ride data' }), {
                 status: 400,
                 headers: {
@@ -50,11 +50,11 @@ export async function POST(req: NextRequest) {
                 wantRide: wantRide,
                 seatsNeeded: seatsNeeded,
                 creatorId: user.id,  // Use the verified user's ID
-
                 // Associate the kids with the ride using the `connect` field
                 kids: {
                     connect: kids.map((kidId: number) => ({ id: kidId }))
-                }
+                },
+                eventId
             },
             include: {
                 kids: true  // Optionally include the kids in the response

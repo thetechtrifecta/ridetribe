@@ -1,63 +1,28 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import { useUser } from "@clerk/nextjs";
-import { Typography, TextField, Button, Checkbox, FormControlLabel, Box, FormControl, FormLabel } from '@mui/material';
+import { Typography, TextField, Button, Checkbox, FormControlLabel, Box, Dialog, DialogContent } from '@mui/material';
 import SelectKids from '@/components/SelectKids';
-import { Kid, PlaceType } from '@/types/types';
 import SelectAddress from '@/components/SelectAddress';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import Share from '@/components/Share';
+import { Kid } from '@/types/types';
+import { Event, PlaceType } from '@/types/types';
 
-const CreateRide: React.FC = () => {
+const CreateRide = ({ event, onClose, rideType }: { event: Event, onClose: () => void, rideType: string }) => {
   const { user } = useUser();
   const [wouldDrive, setWouldDrive] = useState(false);
   const [wantRide, setWantRide] = useState(false);
   const [seatsOffered, setSeatsOffered] = useState('');
   const [seatsNeeded, setSeatsNeeded] = useState('');
   const [selectedKids, setSelectedKids] = useState<Kid[]>([]);
-  const [pickupAddress, setPickupAddress] = useState<PlaceType | null>(null);
-  const [dropoffAddress, setDropoffAddress] = useState<PlaceType | null>(null);  
-  const [rideType, setRideType] = useState<'to' | 'from'>('to');
+  const [address, setAddress] = useState<PlaceType | null>(null);
 
-  const handleRideTypeChange = (
-    event: React.MouseEvent<HTMLElement, MouseEvent>, 
-    newRideType: 'to' | 'from' | null
-  ) => {
-    if (newRideType !== null && newRideType !== rideType) { // Check if newRideType is different to avoid unnecessary actions
-      setRideType(newRideType);
-  
-      // Swap the addresses unconditionally
-      setPickupAddress(dropoffAddress);
-      setDropoffAddress(pickupAddress);
-    }
-  };  
-
-  // Automatically update seatsNeeded when wantRide is selected and kids are chosen
   useEffect(() => {
     if (wantRide) {
-      setSeatsNeeded(selectedKids.length.toString());  // Automatically set seatsNeeded to the number of kids
+      setSeatsNeeded(selectedKids.length.toString());
     }
-  }, [wantRide, selectedKids]);
+  }, [wantRide, selectedKids.length]);
 
-  const handleSeatsChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    setSeats: React.Dispatch<React.SetStateAction<string>>,
-    setValid: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
-    const value = event.target.value;
-    const numValue = parseInt(value, 10);
-    setSeats(value);
-    setValid(!isNaN(numValue) && numValue >= 0 && numValue < 10); // Ensuring the seats are less than 10
-  };  
-
-  const isFormValid = (wouldDrive || wantRide) && pickupAddress && dropoffAddress &&
-  (!wouldDrive || (seatsOffered !== '' && parseInt(seatsOffered, 10) < 10)) &&
-  (!wantRide || (seatsNeeded !== '' && parseInt(seatsNeeded, 10) < 10));
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async (formEvent: React.FormEvent<HTMLFormElement>) => {
+    formEvent.preventDefault();
 
     const clerkUserId = user ? user.id : null;
     if (!clerkUserId) {
@@ -65,10 +30,15 @@ const CreateRide: React.FC = () => {
       return;
     }
 
+    // Correctly set addresses based on the ride type
+    const pickupAddress = rideType === 'from' ? event.address : (typeof address === 'object' ? (address as { description: string }).description : address);
+    const dropoffAddress = rideType === 'to' ? event.address : (typeof address === 'object' ? address.description : address);
+
     const rideData = {
+      eventId: event.id,
       rideType,
-      pickupAddress: pickupAddress?.description,
-      dropoffAddress: dropoffAddress?.description,
+      pickupAddress,
+      dropoffAddress,
       kids: selectedKids.map(kid => kid.id),
       wouldDrive,
       seatsOffered: wouldDrive ? parseInt(seatsOffered, 10) : 0,
@@ -79,62 +49,38 @@ const CreateRide: React.FC = () => {
 
     const response = await fetch('/api/ride/create', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ rideData }),
     });
 
     if (response.ok) {
-      alert(`One-way Ride created`);
+      alert("Ride created successfully!");
+      onClose();
     } else {
-      const error = await response.text();
-      console.error('Failed to create ride:', error);
+      alert("Failed to create ride: " + await response.text());
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', margin: 'auto', maxWidth: 500 }}>
-        <Share />
-        <Typography variant="h6" >Create a Ride</Typography>
-          <ToggleButtonGroup
-            color="primary"
-            value={rideType}
-            exclusive
-            onChange={handleRideTypeChange}
-            aria-label="Ride Direction"
-            fullWidth
-            sx={{my: 2 }}
-          >
-            <ToggleButton value="to">To</ToggleButton>
-            <ToggleButton value="from">From</ToggleButton>
-          </ToggleButtonGroup>
-        <SelectAddress
-          label="Pickup Address"
-          onSelect={setPickupAddress}
-          selectedAddress={pickupAddress}
-        />
-        <SelectAddress
-          label="Dropoff Address"
-          onSelect={setDropoffAddress}
-          selectedAddress={dropoffAddress}
-        />
-        <SelectKids selected={selectedKids} onChange={setSelectedKids} />
-        <FormControl component="fieldset" sx={{ width: '100%', mt: 2, mb: 2 }}>
-          <FormLabel component="legend">Ride Preferences</FormLabel>
+    <Dialog open={true} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogContent>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <Typography variant="h6">Create Ride for {event.title}</Typography>
+          {rideType === 'to' && (
+            <SelectAddress label="Pickup Address" selectedAddress={address} onSelect={setAddress} />
+          )}
+          {rideType === 'from' && (
+            <SelectAddress label="Dropoff Address" selectedAddress={address} onSelect={setAddress} />
+          )}
+          <SelectKids selected={selectedKids} onChange={setSelectedKids} />
           <FormControlLabel control={<Checkbox checked={wouldDrive} onChange={(e) => setWouldDrive(e.target.checked)} />} label="Would Drive" />
           {wouldDrive && (
             <TextField
               label="Seats Offered"
               type="number"
-              name="seatsOffered"
               value={seatsOffered}
-              onChange={(e) => handleSeatsChange(e, setSeatsOffered, () => {})}
+              onChange={(e) => setSeatsOffered(e.target.value)}
               required
-              fullWidth
-              error={seatsOffered !== '' && parseInt(seatsOffered, 10) >= 10}
-              helperText={seatsOffered !== '' && parseInt(seatsOffered, 10) >= 10 ? "Seats offered must be less than 10" : " "}
             />
           )}
           <FormControlLabel control={<Checkbox checked={wantRide} onChange={(e) => setWantRide(e.target.checked)} />} label="Want Ride" />
@@ -142,21 +88,17 @@ const CreateRide: React.FC = () => {
             <TextField
               label="Seats Needed"
               type="number"
-              name="seatsNeeded"
               value={seatsNeeded}
-              onChange={(e) => handleSeatsChange(e, setSeatsNeeded, () => {})}
-              required
-              fullWidth
-              error={seatsNeeded !== '' && parseInt(seatsNeeded, 10) >= 10}
-              helperText={seatsNeeded !== '' && parseInt(seatsNeeded, 10) >= 10 ? "Seats needed must be less than 10" : " "}
+              disabled
+              helperText="Automatically calculated based on selected Kids"
             />
           )}
-        </FormControl>
-        <Button type="submit" variant="contained" color="primary" disabled={!isFormValid}>
-          Submit
-        </Button>
-      </Box>
-    </form>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+            <Button type="submit" color="primary" variant="contained">Create Ride</Button>
+          </Box>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

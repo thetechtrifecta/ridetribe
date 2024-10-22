@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Box, Grid } from '@mui/material';
+import { Typography, Box, Grid, Button, Dialog } from '@mui/material';
 import dayjs from 'dayjs';
+import CreateRide from '@/components/CreateRide'; // Ensure correct path
 import { Event } from '@/types/types';
 
 const EventsList: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
+  const [rideType, setRideType] = useState('');
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -27,6 +31,12 @@ const EventsList: React.FC = () => {
 
     fetchEvents();
   }, []);
+
+  const handleCreateRideClick = (event: Event, type: string) => {
+    setCurrentEvent(event);
+    setRideType(type);
+    setCreateModalOpen(true);
+  };
 
   if (isLoading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
@@ -60,7 +70,24 @@ const EventsList: React.FC = () => {
                 )}
               </Grid>
             ))}
+            {!event.rides.some(ride => ride.rideType === 'to') && (
+              <Grid item xs={12} md={6}>
+                <Button variant="outlined" color="primary" onClick={() => handleCreateRideClick(event, 'to')}>
+                  Create To Ride
+                </Button>
+              </Grid>
+            )}
+            {!event.rides.some(ride => ride.rideType === 'from') && (
+              <Grid item xs={12} md={6}>
+                <Button variant="outlined" color="secondary" onClick={() => handleCreateRideClick(event, 'from')}>
+                  Create From Ride
+                </Button>
+              </Grid>
+            )}
           </Grid>
+          <Dialog open={createModalOpen} onClose={() => setCreateModalOpen(false)} fullWidth maxWidth="sm">
+            <CreateRide event={currentEvent} rideType={rideType} onClose={() => setCreateModalOpen(false)} />
+          </Dialog>
         </Box>
       ))}
     </Box>

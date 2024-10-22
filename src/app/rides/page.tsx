@@ -10,7 +10,7 @@ const Rides: React.FC = () => {
   return (
     <>
       <CreateEvent />
-      <CreateRide />
+      {/* <CreateRide /> */}
       <EventsList />
       {/* <RidesList /> */}
     </>
