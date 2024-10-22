@@ -86,7 +86,9 @@ const EventsList: React.FC = () => {
             )}
           </Grid>
           <Dialog open={createModalOpen} onClose={() => setCreateModalOpen(false)} fullWidth maxWidth="sm">
-            <CreateRide event={currentEvent} rideType={rideType} onClose={() => setCreateModalOpen(false)} />
+            {currentEvent && (
+              <CreateRide event={currentEvent} rideType={rideType} onClose={() => setCreateModalOpen(false)} />
+            )}
           </Dialog>
         </Box>
       ))}
