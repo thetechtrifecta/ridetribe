@@ -32,7 +32,7 @@ const CreateRide = ({ event, onClose, rideType }: { event: Event, onClose: () =>
 
     // Correctly set addresses based on the ride type
     const pickupAddress = rideType === 'from' ? event.address : (typeof address === 'object' ? (address as { description: string }).description : address);
-    const dropoffAddress = rideType === 'to' ? event.address : (typeof address === 'object' ? address.description : address);
+    const dropoffAddress = rideType === 'to' ? event.address : (typeof address === 'object' ? (address as { description: string }).description : address);
 
     const rideData = {
       eventId: event.id,
