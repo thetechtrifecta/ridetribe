@@ -51,22 +51,32 @@ const EventsList: React.FC = () => {
           <Grid container spacing={2} sx={{ padding: 2 }}>
             {event.rides.map(ride => (
               <Grid item xs={12} md={6} key={ride.id}>
-                <Typography variant="h6" sx={{ marginBottom: 2 }}>
+                <Typography variant="h6" color="primary" sx={{ marginBottom: 2 }}>
                   {ride.rideType === 'to' ? 'To Ride:' : 'From Ride:'}
                 </Typography>
-                <Typography variant="subtitle1">{ride.rideType === 'to' ? `Pickup: ${ride.pickupAddress}` : `Dropoff: ${ride.dropoffAddress}`}</Typography>
+                <Typography variant="subtitle1">
+                  {ride.rideType === 'to' ? (
+                    <><strong>Pickup:</strong> {ride.pickupAddress}</>
+                  ) : (
+                    <><strong>Dropoff:</strong> {ride.dropoffAddress}</>
+                  )}
+                </Typography>                
                 {ride.wouldDrive && (
-                  <Typography variant="subtitle1">Would Drive - Seats Offered: {ride.seatsOffered}</Typography>
+                  <Typography variant="subtitle1">
+                    <Typography component="span" sx={{ fontWeight: 'bold' }}>Would Drive:</Typography> {ride.seatsOffered} Seat(s) Offered
+                  </Typography>                
                 )}
                 {ride.wantRide && (
-                  <Typography variant="subtitle1">Wants Ride - Seats Needed: {ride.seatsNeeded}</Typography>
+                  <Typography variant="subtitle1">
+                    <Typography component="span" sx={{ fontWeight: 'bold' }}>Wants Ride:</Typography> {ride.seatsNeeded} Seat(s) Needed
+                  </Typography>
                 )}
                 {ride.kids?.length > 0 && (
-                  ride.kids.map(kid => (
-                    <Typography variant="subtitle1" key={kid.id}>
-                      Kids: {kid.firstName} {kid.lastName} {kid.phone ? `- Phone: ${kid.phone}` : ''}
-                    </Typography>
-                  ))
+                  <Typography variant="subtitle1">
+                    <Typography component="span" sx={{ fontWeight: 'bold' }}>Kids:</Typography> {ride.kids.map(kid => (
+                      `${kid.firstName} ${kid.lastName}${kid.phone ? ` (${kid.phone})` : ''}`
+                    )).join(', ')}
+                  </Typography>
                 )}
               </Grid>
             ))}
@@ -79,7 +89,7 @@ const EventsList: React.FC = () => {
             )}
             {!event.rides.some(ride => ride.rideType === 'from') && (
               <Grid item xs={12} md={6}>
-                <Button variant="outlined" color="secondary" onClick={() => handleCreateRideClick(event, 'from')}>
+                <Button variant="outlined" color="primary" onClick={() => handleCreateRideClick(event, 'from')}>
                   Create From Ride
                 </Button>
               </Grid>
