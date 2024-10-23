@@ -11,8 +11,12 @@ const EventsList: React.FC = () => {
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [currentEvent, setCurrentEvent] = useState<Event | null>(null);
   const [rideType, setRideType] = useState('');
+  const [mounted, setMounted] = useState(false); // Added to track if component has mounted
 
   useEffect(() => {
+    // Mark component as mounted after hydration
+    setMounted(true);
+
     const fetchEvents = async () => {
       try {
         setIsLoading(true);
@@ -37,6 +41,9 @@ const EventsList: React.FC = () => {
     setRideType(type);
     setCreateModalOpen(true);
   };
+
+  // Don't render until after client-side hydration
+  if (!mounted) return null;
 
   if (isLoading) return <Typography>Loading...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
@@ -110,7 +117,6 @@ const EventsList: React.FC = () => {
           </Box>
         );
       })}
-      {/* Move Dialog outside the map to prevent formatting issues*/}
       {currentEvent && (
         <Dialog open={createModalOpen} onClose={() => setCreateModalOpen(false)} fullWidth maxWidth="sm">
           <DialogContent>

@@ -14,12 +14,20 @@ const CreateRide = ({ event, onClose, rideType }: { event: Event, onClose: () =>
   const [seatsNeeded, setSeatsNeeded] = useState('');
   const [selectedKids, setSelectedKids] = useState<Kid[]>([]);
   const [address, setAddress] = useState<PlaceType | null>(null);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     if (wantRide) {
       setSeatsNeeded(selectedKids.length.toString());
     }
   }, [wantRide, selectedKids.length]);
+
+  useEffect(() => {
+    const hasAddress = address && address.description ? true : false; 
+    const hasSeatsOffered = wouldDrive && seatsOffered.trim() !== ''; 
+    const canSubmit = hasAddress && (wouldDrive ? hasSeatsOffered : wantRide);
+    setIsFormValid(!!canSubmit);
+  }, [address, wouldDrive, wantRide, seatsOffered]);  
 
   const handleSubmit = async (formEvent: React.FormEvent<HTMLFormElement>) => {
     formEvent.preventDefault();
@@ -94,7 +102,9 @@ const CreateRide = ({ event, onClose, rideType }: { event: Event, onClose: () =>
             />
           )}
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-            <Button type="submit" color="primary" variant="contained">Create Ride</Button>
+            <Button type="submit" color="primary" variant="contained" disabled={!isFormValid}>
+              Create Ride
+            </Button>
           </Box>
         </form>
       </DialogContent>
