@@ -6,15 +6,36 @@ import SelectAddress from '@/components/SelectAddress';
 import { Kid } from '@/types/types';
 import { Event, PlaceType } from '@/types/types';
 
-const CreateRide = ({ event, onClose, rideType }: { event: Event, onClose: () => void, rideType: string }) => {
+const CreateRide = ({
+    event,
+    onClose,
+    rideType,
+    preselectedKids,
+    oppositeRideSettings
+  }: {
+    event: Event,
+    onClose: () => void,
+    rideType: string,
+    preselectedKids: Kid[],
+    oppositeRideSettings: {
+        wouldDrive: boolean,
+        wantRide: boolean,
+        seatsOffered: string,
+        seatsNeeded: string
+    }
+  }) => {
   const { user } = useUser();
-  const [wouldDrive, setWouldDrive] = useState(false);
-  const [wantRide, setWantRide] = useState(false);
-  const [seatsOffered, setSeatsOffered] = useState('');
-  const [seatsNeeded, setSeatsNeeded] = useState('');
+  const [wouldDrive, setWouldDrive] = useState(oppositeRideSettings.wouldDrive);
+  const [wantRide, setWantRide] = useState(oppositeRideSettings.wantRide);
+  const [seatsOffered, setSeatsOffered] = useState(oppositeRideSettings.seatsOffered);
+  const [seatsNeeded, setSeatsNeeded] = useState(oppositeRideSettings.seatsNeeded);
   const [selectedKids, setSelectedKids] = useState<Kid[]>([]);
   const [address, setAddress] = useState<PlaceType | null>(null);
   const [isFormValid, setIsFormValid] = useState(false);
+
+  useEffect(() => {
+    setSelectedKids(preselectedKids);
+  }, [preselectedKids]);
 
   useEffect(() => {
     if (wantRide) {
