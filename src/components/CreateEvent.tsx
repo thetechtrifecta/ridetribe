@@ -66,7 +66,7 @@ const CreateEvent: React.FC = () => {
       }}
       onSubmit={handleSubmit}
     >
-      <Typography variant="h6">Create an Event</Typography>
+      <Typography variant="h6">Create an Event for Rides</Typography>
       <TextField
         label="Event Title"
         value={title}
