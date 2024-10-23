@@ -4,6 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimeRangePicker } from '@mui/x-date-pickers-pro/DateTimeRangePicker';
+import { SingleInputDateTimeRangeField } from '@mui/x-date-pickers-pro/SingleInputDateTimeRangeField';
 import { DateRange } from '@mui/x-date-pickers-pro/models';
 import { useUser } from "@clerk/nextjs"; 
 import SelectAddress from '@/components/SelectAddress';
@@ -15,7 +16,7 @@ const CreateEvent: React.FC = () => {
   const [address, setAddress] = useState<PlaceType | null>(null);
   const [dateRange, setDateRange] = useState<DateRange<Dayjs>>([
     dayjs(), // Default to current time for start
-    dayjs().add(1, 'hour') // Default to one hour later for end
+    dayjs().add(2, 'hour') // Default to two hours later for end
   ]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -53,32 +54,57 @@ const CreateEvent: React.FC = () => {
   const isFormValid = title && address && dateRange[0] && dateRange[1] && user;
 
   return (
-    <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center', margin: 'auto', maxWidth: 500 }}>
-        <Typography variant="h6">Create an Event</Typography>
-        <TextField
-          label="Event Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-          fullWidth
+    <Box
+      component="form"
+      sx={{
+        my: 4,
+        mx: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        maxWidth: 500,
+      }}
+      onSubmit={handleSubmit}
+    >
+      <Typography variant="h6">Create an Event</Typography>
+      <TextField
+        label="Event Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        required
+        variant="outlined"
+        margin="normal"
+        fullWidth
+      />
+      <SelectAddress
+        label="Event Address"
+        onSelect={setAddress}
+        selectedAddress={address}
+      />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DateTimeRangePicker
+          value={dateRange}
+          onChange={setDateRange}
+          // slots={{ field: SingleInputDateTimeRangeField }}
+          sx={{ 
+            width: '100%',
+            mt: 2.5
+            // '& .MuiInputBase-input': {
+            //   textAlign: 'center',
+            // }
+          }}
         />
-        <SelectAddress
-          label="Event Address"
-          onSelect={setAddress}
-          selectedAddress={address}
-        />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimeRangePicker
-            value={dateRange}
-            onChange={setDateRange}
-          />
-        </LocalizationProvider>
-        <Button type="submit" variant="contained" color="primary" disabled={!isFormValid}>
-          Submit
-        </Button>
-      </Box>
-    </form>
+      </LocalizationProvider>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        disabled={!isFormValid}
+        sx={{ mt: 2 }}
+      >
+        Submit
+      </Button>
+    </Box>
   );
 };
 

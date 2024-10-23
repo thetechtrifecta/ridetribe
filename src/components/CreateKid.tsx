@@ -52,9 +52,11 @@ const CreateKid = () => {
       component="form"
       sx={{
         my: 4,
+        mx: 'auto',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        maxWidth: 500,
       }}
       autoComplete="off"
       onSubmit={handleSubmit}
@@ -68,6 +70,7 @@ const CreateKid = () => {
         required
         variant="outlined"
         margin="normal"
+        fullWidth
       />
       <TextField
         label="Last Name"
@@ -77,6 +80,7 @@ const CreateKid = () => {
         required
         variant="outlined"
         margin="normal"
+        fullWidth
       />
       <TextField
         label="Age"
@@ -86,6 +90,7 @@ const CreateKid = () => {
         required
         variant="outlined"
         margin="normal"
+        fullWidth
       />
       <TextField
         label="Phone (optional)"
@@ -94,6 +99,7 @@ const CreateKid = () => {
         onChange={(e) => setPhone(e.target.value)}
         variant="outlined"
         margin="normal"
+        fullWidth
       />
       <Button type="submit" variant="contained">
         Submit
